@@ -1,4 +1,4 @@
-# Pianoforte (pianoforte)
+# Pianoforte
 
 Pianoforte Is AN Offensive Framework Of Red TEam
 

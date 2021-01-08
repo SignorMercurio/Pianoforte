@@ -3,7 +3,7 @@ export interface User {
   username: string
 }
 
-export interface CreateUserBody {
+export interface UserCreate {
   username: string
   password: string
 }

@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Notify } from 'quasar'
-import { User } from '../models/user'
+import { ProjectCreate, Project } from 'src/models/project'
+import { UserCreate } from '../models/user'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -24,19 +25,12 @@ abstract class HttpClient {
     )
   }
 
-  private _handleResponse = ({ data }: AxiosResponse) => {
-    if (data.code && data.code !== 0) {
-      Notify.create({
-        type: 'negative',
-        message: data.msg as string
-      })
-    } else return data
-  }
+  private _handleResponse = ({ data }: AxiosResponse) => data
 
   protected _handleError = (err: any) => {
     Notify.create({
       type: 'negative',
-      message: 'Request timeout...'
+      message: err.response.data.detail as string
     })
     Promise.reject(err)
   }
@@ -52,8 +46,7 @@ class NoAuthApi extends HttpClient {
     return this.classInstance
   }
 
-  public getUsers = () => this.instance.get<User[]>('users/all')
-  public getUser = (id: number) => this.instance.get<User>(`users?id=${id}`)
+  public createUser = (data: UserCreate) => this.instance.post('users', data)
 }
 
 class MainApi extends HttpClient {
@@ -82,6 +75,17 @@ class MainApi extends HttpClient {
     config.headers['Authorization'] = ''
     return config
   }
+
+  public getUser = (username: string) =>
+    this.instance.get(`users?username=${username}`)
+
+  public getProjects = () => this.instance.get('projects/all')
+  public getProject = (id: number) => this.instance.get(`projects?id=${id}`)
+  public createProject = (data: ProjectCreate) =>
+    this.instance.post('projects', data)
+  public editProject = (data: Project) => this.instance.put('projects', data)
+  public deleteProject = (id: number) =>
+    this.instance.delete(`projects?id=${id}`)
 }
 
 export { NoAuthApi, MainApi }

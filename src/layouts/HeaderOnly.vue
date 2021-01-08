@@ -11,10 +11,6 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above side="left" elevated>
-      <!-- drawer content -->
-    </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
