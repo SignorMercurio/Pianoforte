@@ -3,8 +3,8 @@ import { StateInterface } from '../index'
 import { AccountStateInterface } from './state'
 
 const getters: GetterTree<AccountStateInterface, StateInterface> = {
-  getUser(state: AccountStateInterface) {
-    return state.user
+  getToken(state: AccountStateInterface) {
+    return state.token
   }
 }
 

@@ -1,15 +1,12 @@
 import { MutationTree } from 'vuex'
 import { AccountStateInterface } from './state'
-import { User } from './models'
 
 const mutation: MutationTree<AccountStateInterface> = {
-  setUser(state: AccountStateInterface, user: User) {
-    state.user = user
+  setToken(state: AccountStateInterface, token: string) {
+    state.token = token
   },
-  clearUser(state: AccountStateInterface) {
-    state.user = {
-      username: ''
-    }
+  clearToken(state: AccountStateInterface) {
+    state.token = ''
   }
 }
 

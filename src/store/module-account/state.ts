@@ -1,13 +1,9 @@
-import { User } from './models'
-
 export interface AccountStateInterface {
-  user: User
+  token: string
 }
 
 const state: AccountStateInterface = {
-  user: {
-    username: ''
-  }
+  token: ''
 }
 
 export default state

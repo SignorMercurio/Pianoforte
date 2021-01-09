@@ -1,7 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Notify } from 'quasar'
+import { Status } from 'src/models/misc'
 import { ProjectCreate, Project } from 'src/models/project'
-import { UserCreate } from '../models/user'
+import { AccountStateInterface } from 'src/store/module-account/state'
+import { Token, User, UserCreate } from '../models/user'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -46,7 +48,16 @@ class NoAuthApi extends HttpClient {
     return this.classInstance
   }
 
-  public createUser = (data: UserCreate) => this.instance.post('users', data)
+  public login = ({ username, password }: UserCreate) =>
+    this.instance.post<Token>(
+      'users/login',
+      `username=${username}&password=${password}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    )
 }
 
 class MainApi extends HttpClient {
@@ -72,18 +83,24 @@ class MainApi extends HttpClient {
   }
 
   private _handleRequest = (config: AxiosRequestConfig) => {
-    config.headers['Authorization'] = ''
+    const { token } =
+      (JSON.parse(
+        sessionStorage.getItem('state') as string
+      ) as AccountStateInterface) || {}
+    config.headers['Authorization'] = `Bearer ${token}`
+
     return config
   }
 
-  public getUser = (username: string) =>
-    this.instance.get(`users?username=${username}`)
+  public getUser = () => this.instance.get<User>('users')
 
-  public getProjects = () => this.instance.get('projects/all')
-  public getProject = (id: number) => this.instance.get(`projects?id=${id}`)
+  public getProjects = () => this.instance.get<Project[]>('projects/all')
+  public getProject = (id: number) =>
+    this.instance.get<Project>(`projects?id=${id}`)
   public createProject = (data: ProjectCreate) =>
-    this.instance.post('projects', data)
-  public editProject = (data: Project) => this.instance.put('projects', data)
+    this.instance.post<Status>('projects', data)
+  public editProject = (data: Project) =>
+    this.instance.put<Status>('projects', data)
   public deleteProject = (id: number) =>
     this.instance.delete(`projects?id=${id}`)
 }

@@ -1,10 +1,10 @@
 import { route } from 'quasar/wrappers'
 import VueRouter from 'vue-router'
 import { Store } from 'vuex'
-import { StateInterface } from '../store'
-import { AccountStateInterface } from '../store/module-account/state'
 import routes from './routes'
 import { Notify } from 'quasar'
+import { AccountStateInterface } from 'src/store/module-account/state'
+import { StateInterface } from 'src/store'
 
 /*
  * If not building with SSR mode, you can
@@ -27,17 +27,18 @@ export default route<Store<StateInterface>>(function({ Vue }) {
 
   Router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.auth)) {
-      const store = JSON.parse(
-        sessionStorage.getItem('store') as string
-      ) as AccountStateInterface
-      if (!store || !store.user.username) {
+      const { token } =
+        (JSON.parse(
+          sessionStorage.getItem('state') as string
+        ) as AccountStateInterface) || {}
+      if (!token) {
         Notify.create({
           type: 'warning',
           message: 'Please login first'
         })
         setTimeout(() => {
           next({
-            path: '/auth/login',
+            path: '/login',
             query: { redirect: to.fullPath }
           })
         }, 500)

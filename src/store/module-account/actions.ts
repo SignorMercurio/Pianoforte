@@ -1,16 +1,15 @@
 import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { AccountStateInterface } from './state'
-import { User } from './models'
 
 const actions: ActionTree<AccountStateInterface, StateInterface> = {
-  Login({ commit, state }, user: User) {
-    commit('setUser', user)
-    sessionStorage.setItem('store', JSON.stringify(state))
+  Login({ commit, state }, token: string) {
+    commit('setToken', token)
+    sessionStorage.setItem('state', JSON.stringify(state))
   },
   Logout({ commit }) {
-    commit('clearUser')
-    sessionStorage.removeItem('store')
+    commit('clearToken')
+    sessionStorage.removeItem('state')
   }
 }
 

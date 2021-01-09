@@ -2,9 +2,15 @@ import { RouteConfig } from 'vue-router'
 
 const routes: RouteConfig[] = [
   {
-    path: '/',
+    path: '/login',
     component: () => import('layouts/HeaderOnly.vue'),
     children: [{ path: '', component: () => import('pages/Login.vue') }]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    meta: { auth: true },
+    children: [{ path: '', component: () => import('pages/Project.vue') }]
   },
 
   // Always leave this as last one,
