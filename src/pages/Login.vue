@@ -50,20 +50,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import { NoAuthApi } from 'components/axios'
 import { success } from 'src/components/utils'
+import { UserCreate } from 'src/models/user'
 
 const api = NoAuthApi.getInstance()
 
 function useLogin(store: any, router: any) {
-  const loginData = reactive({
+  const loginData = ref<UserCreate>({
     username: '',
     password: ''
   })
 
   async function login() {
-    const { access_token } = (await api.login(loginData)) || {}
+    const { access_token } = (await api.login(loginData.value)) || {}
     if (access_token) {
       store.dispatch('account/Login', access_token)
       success('Login')
@@ -81,12 +82,8 @@ function useLogin(store: any, router: any) {
 
 export default defineComponent({
   setup(_, { root }) {
-    const store = root.$store
-    const router = root.$router
-    onMounted(() => {
-      //
-    })
-    return { ...useLogin(store, router) }
+    const { $store, $router } = root
+    return { ...useLogin($store, $router) }
   }
 })
 </script>

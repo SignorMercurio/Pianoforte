@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from '@vue/composition-api'
+import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import { success } from 'src/components/utils'
 import { User } from '../models/user'
@@ -71,7 +71,7 @@ function useAccount(store: any, router: any) {
     id: 0,
     username: ''
   })
-  watchEffect(async () => {
+  onMounted(async () => {
     user.value = await api.getUser()
   })
 
