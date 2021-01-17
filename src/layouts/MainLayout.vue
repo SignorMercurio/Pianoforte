@@ -3,18 +3,24 @@
     <q-header class="bg-primary text-white">
       <q-toolbar>
         <q-avatar>
-          <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
+          <img src="logo.png" />
         </q-avatar>
         <q-toolbar-title>
           Pianoforte
         </q-toolbar-title>
         <q-space></q-space>
-        <q-btn
-          :label="user.username"
-          flat
-          icon="account_circle"
-          to="/login"
-        ></q-btn>
+        <q-btn :label="user.username" flat icon="account_circle">
+          <q-menu fit transition-show="flip-right" transition-hide="flip-left">
+            <q-list>
+              <q-item clickable v-close-popup @click="logout">
+                <q-item-section avatar>
+                  <q-icon color="primary" name="logout"></q-icon>
+                </q-item-section>
+                <q-item-section>Logout</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -55,11 +61,12 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
+import { success } from 'src/components/utils'
 import { User } from '../models/user'
 
 const api = MainApi.getInstance()
 
-function useAccount() {
+function useAccount(store: any, router: any) {
   const user = ref<User>({
     id: 0,
     username: ''
@@ -68,20 +75,28 @@ function useAccount() {
     user.value = await api.getUser()
   })
 
-  return { user }
+  function logout() {
+    store.dispatch('account/Logout')
+    success('Logout')
+    setTimeout(() => {
+      router.push('/login')
+    }, 500)
+  }
+
+  return { user, logout }
 }
 
 function useDrawer() {
   const menuList = ref([
     {
-      icon: 'dashboard',
-      label: 'Dashboard',
+      icon: 'format_list_numbered',
+      label: 'Projects',
       route: '/'
     },
     {
-      icon: 'format_list_numbered',
-      label: 'Logging',
-      route: '/log'
+      icon: 'settings',
+      label: 'Settings',
+      route: '/settings'
     }
   ])
 
@@ -89,9 +104,11 @@ function useDrawer() {
 }
 
 export default defineComponent({
-  setup() {
+  setup(_, { root }) {
+    const store = root.$store
+    const router = root.$router
     return {
-      ...useAccount(),
+      ...useAccount(store, router),
       ...useDrawer()
     }
   }

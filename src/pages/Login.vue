@@ -3,7 +3,7 @@
     <q-card class="login-card">
       <q-card-section>
         <div class="text-center">
-          <q-icon name="img:favicon.ico" size="xl" />
+          <q-icon name="img:logo.png" size="xl" />
         </div>
       </q-card-section>
 

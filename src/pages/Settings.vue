@@ -1,5 +1,11 @@
 <template>
-  <q-page class="row items-center justify-evenly"> </q-page>
+  <q-page class="row items-center justify-evenly">
+    <module parent="Settings" icon="settings" name="Projects">
+      <template v-slot:card>
+        <q-card-section> </q-card-section>
+      </template>
+    </module>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -13,9 +19,6 @@ export default defineComponent({
   setup() {
     onMounted(async () => {
       //
-      const projects = await api.getProjects()
-      success('getProjects')
-      console.log(projects)
     })
     return {}
   }

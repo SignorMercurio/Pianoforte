@@ -24,6 +24,7 @@
 import { defineComponent, ref } from '@vue/composition-api'
 
 export default defineComponent({
+  name: 'module',
   props: {
     parent: {
       type: String,

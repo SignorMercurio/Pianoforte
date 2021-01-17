@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
+            <img src="logo.png" />
           </q-avatar>
           Pianoforte
         </q-toolbar-title>
