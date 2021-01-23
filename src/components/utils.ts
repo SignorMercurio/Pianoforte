@@ -1,11 +1,11 @@
 import { Table } from '../models/misc'
 import { Notify } from 'quasar'
 
-export function success(ops: string, icon = 'check_circle') {
+export function success(msg: string, icon = 'check_circle') {
   Notify.create({
     type: 'positive',
     icon: icon,
-    message: `${ops} successfully`
+    message: msg
   })
 }
 

@@ -11,22 +11,22 @@
               <q-item-section side>
                 <div class="q-gutter-sm">
                   <q-btn
-                    size="sm"
+                    flat
                     icon="create"
                     color="primary"
                     @click="edit(item)"
                   ></q-btn>
                   <q-btn
-                    size="sm"
+                    flat
                     icon="delete"
                     color="negative"
                     @click="del(item.id)"
                   ></q-btn>
                   <q-btn
-                    size="sm"
+                    flat
                     icon="more_horiz"
                     color="info"
-                    :to="`/project?id=${item.id}`"
+                    :to="`/projects/detail?id=${item.id}`"
                   ></q-btn>
                 </div>
               </q-item-section>
@@ -34,7 +34,7 @@
           </q-list>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn color="primary" icon="add" @click="add"></q-btn>
+          <q-btn push color="primary" icon="add" @click="add"></q-btn>
         </q-card-actions>
       </template>
     </module>
@@ -45,7 +45,7 @@
         </q-card-section>
         <q-card-section>
           <q-input
-            dense
+            outlined
             label="Project Name"
             v-model="curProject.name"
             lazy-rules

@@ -7,3 +7,4 @@
   - feat(Login): Add basic login feature based on OAuth2
   - style(Login): Minor UI adjustment
   - feat(Project): Add basic project management for API testing
+  - feat(Asset): Add basic logic of asset discovery

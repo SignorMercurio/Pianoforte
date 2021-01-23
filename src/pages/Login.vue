@@ -12,7 +12,6 @@
           <q-input
             outlined
             v-model="loginData.username"
-            dense
             label="Account"
             lazy-rules
             :rules="[val => !!val || '* Required']"
@@ -23,7 +22,6 @@
           <q-input
             outlined
             type="password"
-            dense
             v-model="loginData.password"
             label="Password"
             lazy-rules
@@ -67,9 +65,9 @@ function useLogin(store: any, router: any) {
     const { access_token } = (await api.login(loginData.value)) || {}
     if (access_token) {
       store.dispatch('account/Login', access_token)
-      success('Login')
+      success('Login successfully')
       setTimeout(() => {
-        router.push('/')
+        router.push('/projects')
       }, 500)
     }
   }

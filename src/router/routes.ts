@@ -11,10 +11,14 @@ const routes: RouteConfig[] = [
     component: () => import('layouts/MainLayout.vue'),
     meta: { auth: true },
     children: [
-      { path: '', component: () => import('pages/Project/Index.vue') },
+      { path: 'projects', component: () => import('pages/Project/Index.vue') },
       {
-        path: 'project',
+        path: 'projects/detail',
         component: () => import('pages/Project/Detail.vue')
+      },
+      {
+        path: 'assets',
+        component: () => import('pages/Asset/Index.vue')
       }
     ]
   },

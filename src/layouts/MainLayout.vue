@@ -2,9 +2,12 @@
   <q-layout view="hHh LpR fFf">
     <q-header class="bg-primary text-white">
       <q-toolbar>
-        <q-avatar>
-          <img src="logo.png" />
-        </q-avatar>
+        <q-btn round flat @click="drawer = !drawer">
+          <q-avatar>
+            <img src="logo.png" />
+          </q-avatar>
+        </q-btn>
+
         <q-toolbar-title>
           Pianoforte
         </q-toolbar-title>
@@ -24,7 +27,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above mini side="left">
+    <q-drawer v-model="drawer" show-if-above :width="200" side="left">
       <q-scroll-area class="fit">
         <q-list padding>
           <template v-for="(menuItem, index) in menuList">
@@ -39,13 +42,7 @@
               <q-item-section avatar>
                 <q-icon :name="menuItem.icon" />
               </q-item-section>
-              <q-tooltip
-                anchor="center right"
-                self="center left"
-                :offset="[10, 10]"
-              >
-                {{ menuItem.label }}
-              </q-tooltip>
+              <q-item-section>{{ menuItem.label }}</q-item-section>
             </q-item>
           </template>
         </q-list>
@@ -77,7 +74,7 @@ function useAccount(store: any, router: any) {
 
   function logout() {
     store.dispatch('account/Logout')
-    success('Logout')
+    success('Logout successfully')
     setTimeout(() => {
       router.push('/login')
     }, 500)
@@ -87,11 +84,17 @@ function useAccount(store: any, router: any) {
 }
 
 function useDrawer() {
+  const drawer = ref(true)
   const menuList = ref([
     {
       icon: 'format_list_numbered',
       label: 'Projects',
-      route: '/'
+      route: '/projects'
+    },
+    {
+      icon: 'web_asset',
+      label: 'Assets',
+      route: '/assets'
     },
     {
       icon: 'settings',
@@ -100,7 +103,7 @@ function useDrawer() {
     }
   ])
 
-  return { menuList }
+  return { menuList, drawer }
 }
 
 export default defineComponent({
