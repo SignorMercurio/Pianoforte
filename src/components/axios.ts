@@ -1,11 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Notify } from 'quasar'
-import { Status } from 'src/models/misc'
 
 import { AccountStateInterface } from 'src/store/module-account/state'
 import { Token, User, UserCreate } from 'src/models/user'
 import { ProjectCreate, Project } from 'src/models/project'
 import { Asset } from 'src/models/asset'
+import { Domain } from 'src/models/domain'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -25,17 +25,25 @@ abstract class HttpClient {
   private _initializeResponseInterceptor = () => {
     this.instance.interceptors.response.use(
       this._handleResponse,
-      this._handleError
+      this._handleErrorResp
     )
   }
 
   private _handleResponse = ({ data }: AxiosResponse) => data
 
-  protected _handleError = (err: any) => {
-    Notify.create({
-      type: 'negative',
-      message: err.response.data.detail as string
-    })
+  protected _handleErrorResp = (err: any) => {
+    if (err.response) {
+      Notify.create({
+        type: 'negative',
+        message: err.response.data.detail as string
+      })
+    } else {
+      Notify.create({
+        type: 'negative',
+        message: 'Request timeout...'
+      })
+    }
+
     Promise.reject(err)
   }
 }
@@ -94,15 +102,17 @@ class MainApi extends HttpClient {
     return config
   }
 
+  private _handleError = (err: any) => Promise.reject(err)
+
   public getUser = () => this.instance.get<User>('users')
 
   public getProjects = () => this.instance.get<Project[]>('projects/all')
   public getProject = (id: number) =>
     this.instance.get<Project>(`projects?id=${id}`)
   public createProject = (data: ProjectCreate) =>
-    this.instance.post<Status>('projects', data)
+    this.instance.post<number>('projects', data)
   public editProject = (data: Project) =>
-    this.instance.put<Status>('projects', data)
+    this.instance.put<number>('projects', data)
   public deleteProject = (id: number) =>
     this.instance.delete(`projects?id=${id}`)
 
@@ -114,7 +124,21 @@ class MainApi extends HttpClient {
   public deleteAssetAll = (project_id: number) =>
     this.instance.delete(`assets/all?project_id=${project_id}`)
   public scanAsset = (project_id: number, target: string) =>
-    this.instance.post(`assets/scan?project_id=${project_id}&target=${target}`)
+    this.instance.post<number>(
+      `assets/scan?project_id=${project_id}&target=${target}`
+    )
+
+  public getDomains = (project_id: number, keyword?: string, alive?: boolean) =>
+    this.instance.get<Domain[]>(
+      `domains/all?project_id=${project_id}&keyword=${keyword}&alive=${alive}`
+    )
+  public deleteDomain = (id: number) => this.instance.delete(`domains?id=${id}`)
+  public deleteDomainAll = (project_id: number) =>
+    this.instance.delete(`domains/all?project_id=${project_id}`)
+  public scanDomain = (project_id: number, target: string) =>
+    this.instance.post<number>(
+      `domains/scan?project_id=${project_id}&target=${target}`
+    )
 }
 
 export { NoAuthApi, MainApi }

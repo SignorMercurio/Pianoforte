@@ -8,6 +8,7 @@
               <q-item-section>
                 {{ item.name }}
               </q-item-section>
+
               <q-item-section side>
                 <div class="q-gutter-sm">
                   <q-btn

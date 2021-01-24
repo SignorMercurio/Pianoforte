@@ -1,14 +1,14 @@
-interface Asset {
+interface Domain {
   id: number
-  name: string
-  ip: string
-  port: number
+  alive: boolean
+  subdomain: string
+  level: number
   url: string
-  service: string
+  ip: string
+  cname: string
   status: number
-  domain: string
-  vendor: string
-  project_id: number
+  title: string
+  banner: string
 }
 
 const col = [
@@ -20,17 +20,24 @@ const col = [
     sortable: true
   },
   {
-    name: 'ip',
-    label: 'IP',
+    name: 'subdomain',
+    label: 'Subdomain',
     align: 'left',
-    field: 'ip',
+    field: 'subdomain',
     sortable: true
   },
   {
-    name: 'port',
-    label: 'Port',
+    name: 'alive',
+    label: 'Alive',
     align: 'left',
-    field: 'port',
+    field: 'alive',
+    sortable: true
+  },
+  {
+    name: 'level',
+    label: 'Level',
+    align: 'left',
+    field: 'level',
     sortable: true
   },
   {
@@ -41,10 +48,19 @@ const col = [
     sortable: true
   },
   {
-    name: 'name',
-    label: 'Title',
+    name: 'ip',
+    label: 'IP',
     align: 'left',
-    field: 'name',
+    field: 'ip',
+    style: 'max-width: 150px',
+    classes: 'ellipsis',
+    sortable: true
+  },
+  {
+    name: 'cname',
+    label: 'CNAME',
+    align: 'left',
+    field: 'cname',
     style: 'max-width: 150px',
     classes: 'ellipsis',
     sortable: true
@@ -57,26 +73,19 @@ const col = [
     sortable: true
   },
   {
-    name: 'service',
-    label: 'Service',
+    name: 'title',
+    label: 'Title',
     align: 'left',
-    field: 'service',
+    field: 'title',
     style: 'max-width: 150px',
     classes: 'ellipsis',
     sortable: true
   },
-  // {
-  //   name: 'domain',
-  //   label: 'Domain',
-  //   align: 'left',
-  //   field: 'domain',
-  //   sortable: true
-  // },
   {
-    name: 'vendor',
-    label: 'Vendor',
+    name: 'banner',
+    label: 'Banner',
     align: 'left',
-    field: 'vendor',
+    field: 'banner',
     style: 'max-width: 150px',
     classes: 'ellipsis',
     sortable: true
@@ -88,4 +97,4 @@ const col = [
   }
 ]
 
-export { Asset, col }
+export { Domain, col }

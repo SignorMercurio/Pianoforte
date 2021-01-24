@@ -97,6 +97,11 @@ function useDrawer() {
       route: '/assets'
     },
     {
+      icon: 'dns',
+      label: 'Domains',
+      route: '/domains'
+    },
+    {
       icon: 'settings',
       label: 'Settings',
       route: '/settings'

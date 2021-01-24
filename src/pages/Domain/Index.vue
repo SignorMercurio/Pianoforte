@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Assets" icon="web_asset" name="Scanning">
+    <module parent="Domain" icon="dns" name="Subdomain Enumerating">
       <template v-slot:card>
         <q-card-section class="row q-gutter-x-sm items-start">
           <q-select
@@ -17,7 +17,7 @@
           <q-input
             class="col-6"
             outlined
-            label="Target hostnames, IP addresses, networks, etc."
+            label="Domain name"
             v-model="target"
             :hint="hint"
           >
@@ -28,7 +28,7 @@
         </q-card-actions>
       </template>
     </module>
-    <module parent="Assets" icon="web_asset" name="List">
+    <module parent="Domain" icon="dns" name="Subdomain List">
       <template v-slot:card>
         <q-card-section>
           <q-table
@@ -40,7 +40,7 @@
           >
             <template v-slot:top>
               <q-select
-                class="col-2"
+                class="col-2 q-mr-md"
                 outlined
                 option-label="name"
                 option-value="id"
@@ -49,16 +49,21 @@
                 v-model="project_id_filter"
                 emit-value
                 map-options
-                @input="getAssets"
+                @input="getDomains"
               ></q-select>
+              <q-toggle
+                label="Alive Domains Only"
+                v-model="alive_filter"
+                @input="getDomains"
+              ></q-toggle>
               <q-space></q-space>
               <q-input
                 class="col-3"
                 outlined
-                label="Search URL"
+                label="Search domain name"
                 v-model="keyword_filter"
                 debounce="300"
-                @input="getAssets"
+                @input="getDomains"
               >
                 <template v-slot:prepend>
                   <q-icon name="search"></q-icon>
@@ -70,14 +75,20 @@
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="ip" :props="props">
-                  {{ props.row.ip }}
+                <q-td key="subdomain" :props="props">
+                  {{ props.row.subdomain }}
                 </q-td>
-                <q-td key="port" :props="props"
-                  ><q-chip square size="sm" color="primary">{{
-                    props.row.port
-                  }}</q-chip></q-td
-                >
+                <q-td key="alive" :props="props">
+                  <q-icon
+                    v-if="props.row.alive"
+                    name="check_circle"
+                    color="positive"
+                  ></q-icon>
+                  <q-icon v-else name="cancel" color="negative"></q-icon>
+                </q-td>
+                <q-td key="level" :props="props">
+                  {{ props.row.level }}
+                </q-td>
                 <q-td key="url" :props="props">
                   <q-btn
                     size="sm"
@@ -91,33 +102,34 @@
                     target="_blank"
                   ></q-btn>
                 </q-td>
-                <q-td key="name" :props="props">
-                  {{ props.row.name }}
-                  <q-tooltip v-if="props.row.name">{{
-                    props.row.name
+                <q-td key="ip" :props="props">
+                  {{ props.row.ip }}
+                  <q-tooltip v-if="props.row.ip">{{ props.row.ip }}</q-tooltip>
+                </q-td>
+                <q-td key="cname" :props="props">
+                  {{ props.row.cname }}
+                  <q-tooltip v-if="props.row.cname">{{
+                    props.row.cname
                   }}</q-tooltip>
                 </q-td>
-                <q-td key="status" :props="props"
-                  ><q-chip
+                <q-td key="status" :props="props">
+                  <q-chip
                     v-if="props.row.status"
                     size="sm"
                     :color="status2color(props.row.status)"
                     >{{ props.row.status }}</q-chip
-                  ></q-td
-                >
-                <q-td key="service" :props="props">
-                  {{ props.row.service }}
-                  <q-tooltip v-if="props.row.service">{{
-                    props.row.service
+                  >
+                </q-td>
+                <q-td key="title" :props="props">
+                  {{ props.row.title }}
+                  <q-tooltip v-if="props.row.title">{{
+                    props.row.title
                   }}</q-tooltip>
                 </q-td>
-                <!-- <q-td key="domain" :props="props">
-                  {{ props.row.domain }}
-                </q-td> -->
-                <q-td key="vendor" :props="props">
-                  {{ props.row.vendor }}
-                  <q-tooltip v-if="props.row.vendor">{{
-                    props.row.vendor
+                <q-td key="banner" :props="props">
+                  {{ props.row.banner }}
+                  <q-tooltip v-if="props.row.banner">{{
+                    props.row.banner
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
@@ -133,7 +145,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="update" @click="getAssets"></q-btn>
+          <q-btn push color="primary" icon="update" @click="getDomains"></q-btn>
           <q-btn
             push
             color="negative"
@@ -150,7 +162,7 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
-import { Asset, col } from 'src/models/asset'
+import { Domain, col } from 'src/models/domain'
 import { Dialog } from 'quasar'
 import { Project } from 'src/models/project'
 import { success, status2color } from 'src/components/utils'
@@ -169,7 +181,7 @@ function useScan() {
   const project_id = ref(1)
 
   async function scan() {
-    const code = await api.scanAsset(project_id.value, target.value)
+    const code = await api.scanDomain(project_id.value, target.value)
     if (code === 0) {
       success('Scanning task submitted')
     }
@@ -185,35 +197,37 @@ function useTable() {
     rowsPerPage: 10
   })
   const columns = ref(col)
-  const data = ref<Asset[]>([])
+  const data = ref<Domain[]>([])
   const project_id_filter = ref(1)
   const keyword_filter = ref('')
-  const getAssets = async () => {
+  const alive_filter = ref(false)
+  const getDomains = async () => {
     loading.value = true
-    data.value = await api.getAssets(
+    data.value = await api.getDomains(
       project_id_filter.value,
-      keyword_filter.value
+      keyword_filter.value,
+      alive_filter.value
     )
     loading.value = false
   }
 
-  onMounted(getAssets)
+  onMounted(getDomains)
 
   function del(id: number) {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete this asset?'
+      message: 'Delete this domain?'
     }).onOk(() => {
-      api.deleteAsset(id).then(getAssets)
+      api.deleteDomain(id).then(getDomains)
     })
   }
 
   function del_all() {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete all assets of this project?'
+      message: 'Delete all domains of this project?'
     }).onOk(() => {
-      api.deleteAssetAll(project_id_filter.value).then(getAssets)
+      api.deleteDomainAll(project_id_filter.value).then(getDomains)
     })
   }
 
@@ -224,7 +238,8 @@ function useTable() {
     data,
     project_id_filter,
     keyword_filter,
-    getAssets,
+    alive_filter,
+    getDomains,
     del,
     del_all,
     status2color
@@ -236,8 +251,7 @@ export default defineComponent({
     module
   },
   setup() {
-    const hint =
-      'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
+    const hint = 'e.g. hackerone.com'
     return { hint, ...useScan(), ...useTable() }
   }
 })

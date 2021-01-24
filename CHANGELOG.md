@@ -8,3 +8,4 @@
   - style(Login): Minor UI adjustment
   - feat(Project): Add basic project management for API testing
   - feat(Asset): Add basic logic of asset discovery
+  - feat(Domain): Add basic logic of subdomain enumeration

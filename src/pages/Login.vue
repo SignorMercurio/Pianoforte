@@ -10,6 +10,7 @@
       <q-tab-panel name="login">
         <q-form @submit="login" class="q-pa-md q-gutter-md">
           <q-input
+            autofocus
             outlined
             v-model="loginData.username"
             label="Account"

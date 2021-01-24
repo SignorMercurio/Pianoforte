@@ -19,6 +19,10 @@ const routes: RouteConfig[] = [
       {
         path: 'assets',
         component: () => import('pages/Asset/Index.vue')
+      },
+      {
+        path: 'domains',
+        component: () => import('pages/Domain/Index.vue')
       }
     ]
   },
