@@ -21,8 +21,18 @@ const routes: RouteConfig[] = [
         component: () => import('pages/Asset/Index.vue')
       },
       {
+        path: 'assets/scan',
+        name: 'AssetScan',
+        component: () => import('pages/Asset/Scan.vue')
+      },
+      {
         path: 'domains',
         component: () => import('pages/Domain/Index.vue')
+      },
+      {
+        path: 'domains/scan',
+        name: 'DomainScan',
+        component: () => import('pages/Domain/Scan.vue')
       }
     ]
   },

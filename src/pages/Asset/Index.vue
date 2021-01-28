@@ -1,34 +1,47 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Assets" icon="web_asset" name="Scanning">
+    <module parent="Assets" icon="web_asset" name="Discovery">
       <template v-slot:card>
-        <q-card-section class="row q-gutter-x-sm items-start">
-          <q-select
-            class="col-2"
-            outlined
-            option-label="name"
-            option-value="id"
-            label="Project"
-            :options="options"
-            v-model="project_id"
-            emit-value
-            map-options
-          ></q-select>
-          <q-input
-            class="col-6"
-            outlined
-            label="Target hostnames, IP addresses, networks, etc."
-            v-model="target"
-            :hint="hint"
+        <q-card-section>
+          <q-form
+            ref="form"
+            @submit="scan"
+            class="row q-gutter-x-md items-start"
           >
-          </q-input>
+            <q-select
+              class="col-2"
+              outlined
+              option-label="name"
+              option-value="id"
+              label="Project"
+              :options="options"
+              v-model="project_id"
+              emit-value
+              map-options
+            ></q-select>
+            <q-input
+              class="col-6"
+              outlined
+              label="Target hostnames, IP addresses, networks, etc."
+              v-model="target"
+              :hint="hint"
+              lazy-rules
+              :rules="[val => !!val || '* Required']"
+            >
+            </q-input>
+          </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="find_in_page" @click="scan"></q-btn>
+          <q-btn
+            push
+            color="primary"
+            icon="find_in_page"
+            @click="formSubmit"
+          ></q-btn>
         </q-card-actions>
       </template>
     </module>
-    <module parent="Assets" icon="web_asset" name="List">
+    <module parent="Assets" icon="web_asset" name="Scan Results">
       <template v-slot:card>
         <q-card-section>
           <q-table
@@ -49,16 +62,16 @@
                 v-model="project_id_filter"
                 emit-value
                 map-options
-                @input="getAssets"
+                @input="getScans"
               ></q-select>
               <q-space></q-space>
               <q-input
                 class="col-3"
                 outlined
-                label="Search URL"
+                label="Search target"
                 v-model="keyword_filter"
                 debounce="300"
-                @input="getAssets"
+                @input="getScans"
               >
                 <template v-slot:prepend>
                   <q-icon name="search"></q-icon>
@@ -70,57 +83,32 @@
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="ip" :props="props">
-                  {{ props.row.ip }}
+                <q-td key="project" :props="props">
+                  {{ props.row.project.name }}
                 </q-td>
-                <q-td key="port" :props="props"
-                  ><q-chip square size="sm" color="primary">{{
-                    props.row.port
-                  }}</q-chip></q-td
-                >
-                <q-td key="url" :props="props">
-                  <q-btn
-                    size="sm"
-                    color="blue"
-                    :label="props.row.url"
-                    no-caps
-                    flat
-                    dense
-                    type="a"
-                    :href="props.row.url"
-                    target="_blank"
-                  ></q-btn>
+                <q-td key="target" :props="props">
+                  {{ props.row.target }}
                 </q-td>
-                <q-td key="name" :props="props">
-                  {{ props.row.name }}
-                  <q-tooltip v-if="props.row.name">{{
-                    props.row.name
-                  }}</q-tooltip>
+                <q-td key="created_at" :props="props">
+                  {{ fmtTime(props.row.created_at) }}
                 </q-td>
-                <q-td key="status" :props="props"
-                  ><q-chip
-                    v-if="props.row.status"
-                    size="sm"
-                    :color="status2color(props.row.status)"
-                    >{{ props.row.status }}</q-chip
-                  ></q-td
-                >
-                <q-td key="service" :props="props">
-                  {{ props.row.service }}
-                  <q-tooltip v-if="props.row.service">{{
-                    props.row.service
-                  }}</q-tooltip>
-                </q-td>
-                <!-- <q-td key="domain" :props="props">
-                  {{ props.row.domain }}
-                </q-td> -->
-                <q-td key="vendor" :props="props">
-                  {{ props.row.vendor }}
-                  <q-tooltip v-if="props.row.vendor">{{
-                    props.row.vendor
-                  }}</q-tooltip>
+                <q-td key="status" :props="props">
+                  <q-chip :color="str2color(props.row.status)" size="sm">
+                    {{ props.row.status }}
+                  </q-chip>
                 </q-td>
                 <q-td key="op" :props="props">
+                  <q-btn
+                    flat
+                    icon="more_horiz"
+                    color="info"
+                    @click="
+                      $router.push({
+                        name: 'AssetScan',
+                        params: { scan: props.row }
+                      })
+                    "
+                  ></q-btn>
                   <q-btn
                     flat
                     icon="delete"
@@ -133,13 +121,13 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="update" @click="getAssets"></q-btn>
-          <q-btn
+          <q-btn push color="primary" icon="update" @click="getScans"></q-btn>
+          <!-- <q-btn
             push
             color="negative"
             icon="delete_sweep"
             @click="del_all"
-          ></q-btn>
+          ></q-btn> -->
         </q-card-actions>
       </template>
     </module>
@@ -150,32 +138,25 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
-import { Asset, col } from 'src/models/asset'
-import { Dialog } from 'quasar'
 import { Project } from 'src/models/project'
-import { success, status2color } from 'src/components/utils'
+import { Scan, col } from 'src/models/scan'
+import { Dialog } from 'quasar'
+import { success, str2color, fmtTime } from 'src/components/utils'
 
 const api = MainApi.getInstance()
 
-function useScan() {
-  const options = ref<Project[]>([])
-  const getOptions = async () => {
-    options.value = await api.getProjects()
-  }
-
-  onMounted(getOptions)
+function useScan(store: any) {
+  const options = ref<Project[]>(store.getters['project/getProjects'])
 
   const target = ref('')
   const project_id = ref(1)
+  const form = ref()
 
-  async function scan() {
-    const code = await api.scanAsset(project_id.value, target.value)
-    if (code === 0) {
-      success('Scanning task submitted')
-    }
+  function formSubmit() {
+    form.value.submit()
   }
 
-  return { options, getOptions, target, project_id, scan }
+  return { options, target, project_id, form, formSubmit }
 }
 
 function useTable() {
@@ -185,35 +166,27 @@ function useTable() {
     rowsPerPage: 10
   })
   const columns = ref(col)
-  const data = ref<Asset[]>([])
+  const data = ref<Scan[]>([])
   const project_id_filter = ref(1)
   const keyword_filter = ref('')
-  const getAssets = async () => {
+  const getScans = async () => {
     loading.value = true
-    data.value = await api.getAssets(
+    data.value = await api.getScans(
       project_id_filter.value,
+      'Asset Discovery',
       keyword_filter.value
     )
     loading.value = false
   }
 
-  onMounted(getAssets)
+  onMounted(getScans)
 
   function del(id: number) {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete this asset?'
+      message: 'Delete this scan?'
     }).onOk(() => {
-      api.deleteAsset(id).then(getAssets)
-    })
-  }
-
-  function del_all() {
-    Dialog.create({
-      title: 'Confirm',
-      message: 'Delete all assets of this project?'
-    }).onOk(() => {
-      api.deleteAssetAll(project_id_filter.value).then(getAssets)
+      api.deleteScan(id).then(getScans)
     })
   }
 
@@ -224,10 +197,8 @@ function useTable() {
     data,
     project_id_filter,
     keyword_filter,
-    getAssets,
-    del,
-    del_all,
-    status2color
+    getScans,
+    del
   }
 }
 
@@ -235,10 +206,50 @@ export default defineComponent({
   components: {
     module
   },
-  setup() {
+  setup(_, { root }) {
+    const store = root.$store
     const hint =
       'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
-    return { hint, ...useScan(), ...useTable() }
+    const {
+      loading,
+      pagination,
+      columns,
+      data,
+      project_id_filter,
+      keyword_filter,
+      getScans,
+      del
+    } = useTable()
+    const { options, target, project_id, form, formSubmit } = useScan(store)
+
+    async function scan() {
+      const code = await api.scanAsset(project_id.value, target.value)
+      if (code) {
+        success(`Scanning task #${code} submitted`)
+        project_id_filter.value = project_id.value
+        getScans()
+      }
+    }
+
+    return {
+      hint,
+      loading,
+      pagination,
+      columns,
+      data,
+      project_id_filter,
+      keyword_filter,
+      getScans,
+      del,
+      options,
+      target,
+      project_id,
+      form,
+      formSubmit,
+      scan,
+      str2color,
+      fmtTime
+    }
   }
 })
 </script>

@@ -4,6 +4,7 @@ import { Notify } from 'quasar'
 import { AccountStateInterface } from 'src/store/module-account/state'
 import { Token, User, UserCreate } from 'src/models/user'
 import { ProjectCreate, Project } from 'src/models/project'
+import { Scan } from 'src/models/scan'
 import { Asset } from 'src/models/asset'
 import { Domain } from 'src/models/domain'
 
@@ -111,30 +112,36 @@ class MainApi extends HttpClient {
     this.instance.get<Project>(`projects?id=${id}`)
   public createProject = (data: ProjectCreate) =>
     this.instance.post<number>('projects', data)
-  public editProject = (data: Project) =>
-    this.instance.put<number>('projects', data)
+  public editProject = (id: number, data: ProjectCreate) =>
+    this.instance.put<number>(`projects?id=${id}`, data)
   public deleteProject = (id: number) =>
     this.instance.delete(`projects?id=${id}`)
 
-  public getAssets = (project_id: number, keyword?: string) =>
+  public getScans = (project_id: number, type?: string, keyword?: string) =>
+    this.instance.get<Scan[]>(
+      `scans/all?project_id=${project_id}&type=${type}&keyword=${keyword}`
+    )
+  public deleteScan = (id: number) => this.instance.delete(`scans?id=${id}`)
+
+  public getAssets = (scan_id: number, keyword?: string) =>
     this.instance.get<Asset[]>(
-      `assets/all?project_id=${project_id}&keyword=${keyword}`
+      `assets/all?scan_id=${scan_id}&keyword=${keyword}`
     )
   public deleteAsset = (id: number) => this.instance.delete(`assets?id=${id}`)
-  public deleteAssetAll = (project_id: number) =>
-    this.instance.delete(`assets/all?project_id=${project_id}`)
+  public deleteAssetAll = (scan_id: number) =>
+    this.instance.delete(`assets/all?scan_id=${scan_id}`)
   public scanAsset = (project_id: number, target: string) =>
     this.instance.post<number>(
       `assets/scan?project_id=${project_id}&target=${target}`
     )
 
-  public getDomains = (project_id: number, keyword?: string, alive?: boolean) =>
+  public getDomains = (scan_id: number, keyword?: string, alive?: boolean) =>
     this.instance.get<Domain[]>(
-      `domains/all?project_id=${project_id}&keyword=${keyword}&alive=${alive}`
+      `domains/all?scan_id=${scan_id}&keyword=${keyword}&alive=${alive}`
     )
   public deleteDomain = (id: number) => this.instance.delete(`domains?id=${id}`)
-  public deleteDomainAll = (project_id: number) =>
-    this.instance.delete(`domains/all?project_id=${project_id}`)
+  public deleteDomainAll = (scan_id: number) =>
+    this.instance.delete(`domains/all?scan_id=${scan_id}`)
   public scanDomain = (project_id: number, target: string) =>
     this.instance.post<number>(
       `domains/scan?project_id=${project_id}&target=${target}`

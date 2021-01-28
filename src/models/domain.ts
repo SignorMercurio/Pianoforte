@@ -9,6 +9,7 @@ interface Domain {
   status: number
   title: string
   banner: string
+  // scan_id: number
 }
 
 const col = [

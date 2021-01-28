@@ -19,15 +19,15 @@
                   ></q-btn>
                   <q-btn
                     flat
-                    icon="delete"
-                    color="negative"
-                    @click="del(item.id)"
-                  ></q-btn>
-                  <q-btn
-                    flat
                     icon="more_horiz"
                     color="info"
                     :to="`/projects/detail?id=${item.id}`"
+                  ></q-btn
+                  ><q-btn
+                    flat
+                    icon="delete"
+                    color="negative"
+                    @click="del(item.id)"
                   ></q-btn>
                 </div>
               </q-item-section>
@@ -134,10 +134,11 @@ export default defineComponent({
     const { dialog, curProject, add, edit } = useDialog()
 
     function submit() {
-      if (curProject.value.id !== 0) {
-        api.editProject(curProject.value).then(getProjects)
+      const data = curProject.value
+      if (data.id !== 0) {
+        api.editProject(data.id, { name: data.name }).then(getProjects)
       } else {
-        api.createProject(curProject.value).then(getProjects)
+        api.createProject(data).then(getProjects)
       }
     }
 

@@ -1,34 +1,47 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Domain" icon="dns" name="Subdomain Enumerating">
+    <module parent="Domains" icon="dns" name="Subdomain Enumerating">
       <template v-slot:card>
-        <q-card-section class="row q-gutter-x-sm items-start">
-          <q-select
-            class="col-2"
-            outlined
-            option-label="name"
-            option-value="id"
-            label="Project"
-            :options="options"
-            v-model="project_id"
-            emit-value
-            map-options
-          ></q-select>
-          <q-input
-            class="col-6"
-            outlined
-            label="Domain name"
-            v-model="target"
-            :hint="hint"
+        <q-card-section>
+          <q-form
+            ref="form"
+            @submit="scan"
+            class="row q-gutter-x-md items-start"
           >
-          </q-input>
+            <q-select
+              class="col-2"
+              outlined
+              option-label="name"
+              option-value="id"
+              label="Project"
+              :options="options"
+              v-model="project_id"
+              emit-value
+              map-options
+            ></q-select>
+            <q-input
+              class="col-6"
+              outlined
+              label="Domain name"
+              v-model="target"
+              :hint="hint"
+              lazy-rules
+              :rules="[val => !!val || '* Required']"
+            >
+            </q-input>
+          </q-form>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="find_in_page" @click="scan"></q-btn>
+          <q-btn
+            push
+            color="primary"
+            icon="find_in_page"
+            @click="formSubmit"
+          ></q-btn>
         </q-card-actions>
       </template>
     </module>
-    <module parent="Domain" icon="dns" name="Subdomain List">
+    <module parent="Domains" icon="dns" name="Scan Results">
       <template v-slot:card>
         <q-card-section>
           <q-table
@@ -40,7 +53,7 @@
           >
             <template v-slot:top>
               <q-select
-                class="col-2 q-mr-md"
+                class="col-2"
                 outlined
                 option-label="name"
                 option-value="id"
@@ -49,21 +62,16 @@
                 v-model="project_id_filter"
                 emit-value
                 map-options
-                @input="getDomains"
+                @input="getScans"
               ></q-select>
-              <q-toggle
-                label="Alive Domains Only"
-                v-model="alive_filter"
-                @input="getDomains"
-              ></q-toggle>
               <q-space></q-space>
               <q-input
                 class="col-3"
                 outlined
-                label="Search domain name"
+                label="Search target"
                 v-model="keyword_filter"
                 debounce="300"
-                @input="getDomains"
+                @input="getScans"
               >
                 <template v-slot:prepend>
                   <q-icon name="search"></q-icon>
@@ -75,64 +83,32 @@
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="subdomain" :props="props">
-                  {{ props.row.subdomain }}
+                <q-td key="project" :props="props">
+                  {{ props.row.project.name }}
                 </q-td>
-                <q-td key="alive" :props="props">
-                  <q-icon
-                    v-if="props.row.alive"
-                    name="check_circle"
-                    color="positive"
-                  ></q-icon>
-                  <q-icon v-else name="cancel" color="negative"></q-icon>
+                <q-td key="target" :props="props">
+                  {{ props.row.target }}
                 </q-td>
-                <q-td key="level" :props="props">
-                  {{ props.row.level }}
-                </q-td>
-                <q-td key="url" :props="props">
-                  <q-btn
-                    size="sm"
-                    color="blue"
-                    :label="props.row.url"
-                    no-caps
-                    flat
-                    dense
-                    type="a"
-                    :href="props.row.url"
-                    target="_blank"
-                  ></q-btn>
-                </q-td>
-                <q-td key="ip" :props="props">
-                  {{ props.row.ip }}
-                  <q-tooltip v-if="props.row.ip">{{ props.row.ip }}</q-tooltip>
-                </q-td>
-                <q-td key="cname" :props="props">
-                  {{ props.row.cname }}
-                  <q-tooltip v-if="props.row.cname">{{
-                    props.row.cname
-                  }}</q-tooltip>
+                <q-td key="created_at" :props="props">
+                  {{ fmtTime(props.row.created_at) }}
                 </q-td>
                 <q-td key="status" :props="props">
-                  <q-chip
-                    v-if="props.row.status"
-                    size="sm"
-                    :color="status2color(props.row.status)"
-                    >{{ props.row.status }}</q-chip
-                  >
-                </q-td>
-                <q-td key="title" :props="props">
-                  {{ props.row.title }}
-                  <q-tooltip v-if="props.row.title">{{
-                    props.row.title
-                  }}</q-tooltip>
-                </q-td>
-                <q-td key="banner" :props="props">
-                  {{ props.row.banner }}
-                  <q-tooltip v-if="props.row.banner">{{
-                    props.row.banner
-                  }}</q-tooltip>
+                  <q-chip :color="str2color(props.row.status)" size="sm">
+                    {{ props.row.status }}
+                  </q-chip>
                 </q-td>
                 <q-td key="op" :props="props">
+                  <q-btn
+                    flat
+                    icon="more_horiz"
+                    color="info"
+                    @click="
+                      $router.push({
+                        name: 'DomainScan',
+                        params: { scan: props.row }
+                      })
+                    "
+                  ></q-btn>
                   <q-btn
                     flat
                     icon="delete"
@@ -145,13 +121,13 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="update" @click="getDomains"></q-btn>
-          <q-btn
+          <q-btn push color="primary" icon="update" @click="getScans"></q-btn>
+          <!-- <q-btn
             push
             color="negative"
             icon="delete_sweep"
             @click="del_all"
-          ></q-btn>
+          ></q-btn> -->
         </q-card-actions>
       </template>
     </module>
@@ -162,32 +138,25 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
-import { Domain, col } from 'src/models/domain'
-import { Dialog } from 'quasar'
 import { Project } from 'src/models/project'
-import { success, status2color } from 'src/components/utils'
+import { Scan, col } from 'src/models/scan'
+import { Dialog } from 'quasar'
+import { success, str2color, fmtTime } from 'src/components/utils'
 
 const api = MainApi.getInstance()
 
-function useScan() {
-  const options = ref<Project[]>([])
-  const getOptions = async () => {
-    options.value = await api.getProjects()
-  }
-
-  onMounted(getOptions)
+function useScan(store: any) {
+  const options = ref<Project[]>(store.getters['project/getProjects'])
 
   const target = ref('')
   const project_id = ref(1)
+  const form = ref()
 
-  async function scan() {
-    const code = await api.scanDomain(project_id.value, target.value)
-    if (code === 0) {
-      success('Scanning task submitted')
-    }
+  function formSubmit() {
+    form.value.submit()
   }
 
-  return { options, getOptions, target, project_id, scan }
+  return { options, target, project_id, form, formSubmit }
 }
 
 function useTable() {
@@ -197,37 +166,27 @@ function useTable() {
     rowsPerPage: 10
   })
   const columns = ref(col)
-  const data = ref<Domain[]>([])
+  const data = ref<Scan[]>([])
   const project_id_filter = ref(1)
   const keyword_filter = ref('')
-  const alive_filter = ref(false)
-  const getDomains = async () => {
+  const getScans = async () => {
     loading.value = true
-    data.value = await api.getDomains(
+    data.value = await api.getScans(
       project_id_filter.value,
-      keyword_filter.value,
-      alive_filter.value
+      'Subdomain Enumeration',
+      keyword_filter.value
     )
     loading.value = false
   }
 
-  onMounted(getDomains)
+  onMounted(getScans)
 
   function del(id: number) {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete this domain?'
+      message: 'Delete this scan?'
     }).onOk(() => {
-      api.deleteDomain(id).then(getDomains)
-    })
-  }
-
-  function del_all() {
-    Dialog.create({
-      title: 'Confirm',
-      message: 'Delete all domains of this project?'
-    }).onOk(() => {
-      api.deleteDomainAll(project_id_filter.value).then(getDomains)
+      api.deleteScan(id).then(getScans)
     })
   }
 
@@ -238,11 +197,8 @@ function useTable() {
     data,
     project_id_filter,
     keyword_filter,
-    alive_filter,
-    getDomains,
-    del,
-    del_all,
-    status2color
+    getScans,
+    del
   }
 }
 
@@ -250,9 +206,49 @@ export default defineComponent({
   components: {
     module
   },
-  setup() {
+  setup(_, { root }) {
+    const store = root.$store
     const hint = 'e.g. hackerone.com'
-    return { hint, ...useScan(), ...useTable() }
+
+    const {
+      loading,
+      pagination,
+      columns,
+      data,
+      project_id_filter,
+      keyword_filter,
+      getScans,
+      del
+    } = useTable()
+    const { options, target, project_id, form, formSubmit } = useScan(store)
+
+    async function scan() {
+      const code = await api.scanDomain(project_id.value, target.value)
+      if (code) {
+        success(`Scanning task #${code} submitted`)
+        project_id_filter.value = project_id.value
+        getScans()
+      }
+    }
+    return {
+      hint,
+      loading,
+      pagination,
+      columns,
+      data,
+      project_id_filter,
+      keyword_filter,
+      getScans,
+      del,
+      options,
+      target,
+      project_id,
+      form,
+      formSubmit,
+      scan,
+      str2color,
+      fmtTime
+    }
   }
 })
 </script>

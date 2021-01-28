@@ -23,8 +23,14 @@ export function status2color(status: number) {
   else return 'red'
 }
 
-export function fmtTime(timestamp: number): string {
-  return new Date(Math.floor(timestamp * 1000)).toLocaleString('zh-cn', {
+export function str2color(status: string) {
+  if (status === 'Pending') return 'orange'
+  else if (status === 'Scanning') return 'teal'
+  else return 'green'
+}
+
+export function fmtTime(time: string): string {
+  return new Date(time).toLocaleString('zh-cn', {
     hour12: false
   })
 }

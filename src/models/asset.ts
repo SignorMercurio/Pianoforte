@@ -8,7 +8,7 @@ interface Asset {
   status: number
   domain: string
   vendor: string
-  project_id: number
+  // scan_id: number
 }
 
 const col = [

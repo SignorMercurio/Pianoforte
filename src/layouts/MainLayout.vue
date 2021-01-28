@@ -115,6 +115,11 @@ export default defineComponent({
   setup(_, { root }) {
     const store = root.$store
     const router = root.$router
+
+    onMounted(async () => {
+      store.commit('project/setProjects', await api.getProjects())
+    })
+
     return {
       ...useAccount(store, router),
       ...useDrawer()
