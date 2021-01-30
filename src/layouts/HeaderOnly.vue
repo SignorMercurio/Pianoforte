@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <q-header class="bg-primary text-white">
+    <q-headerclass="bg-dark text-white">
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
@@ -9,7 +9,7 @@
           Pianoforte
         </q-toolbar-title>
       </q-toolbar>
-    </q-header>
+    </q-headerclass=>
 
     <q-page-container>
       <router-view />

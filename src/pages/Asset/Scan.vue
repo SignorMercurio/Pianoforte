@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
-    <scan-info :scan="scan"></scan-info>
+    <scan-info :scan="scan" />
 
     <module parent="Scan" icon="find_in_page" name="Assets">
       <template v-slot:card>
@@ -82,25 +82,20 @@
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
-                  <q-btn
-                    flat
-                    icon="delete"
-                    color="negative"
-                    @click="del(props.row.id)"
-                  ></q-btn>
+                  <crud-btn type="del" @click="del(props.row.id)" />
                 </q-td>
               </q-tr>
             </template>
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="update" @click="getAssets"></q-btn>
-          <q-btn
-            push
+          <action-btn icon="update" tip="Refresh" @click="getAssets" />
+          <action-btn
             color="negative"
             icon="delete_sweep"
+            tip="Delete All"
             @click="del_all"
-          ></q-btn>
+          />
         </q-card-actions>
       </template>
     </module>
@@ -111,6 +106,8 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
+import crudBtn from 'components/Buttons/CrudBtn.vue'
+import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import { Asset, col } from 'src/models/asset'
 import { Scan } from 'src/models/scan'
@@ -169,8 +166,10 @@ function useTable(scan_id: number) {
 
 export default defineComponent({
   components: {
-    scanInfo,
-    module
+    module,
+    crudBtn,
+    actionBtn,
+    scanInfo
   },
   setup(_, { root }) {
     const route = root.$route

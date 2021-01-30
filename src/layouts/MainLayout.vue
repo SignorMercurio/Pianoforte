@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <q-header class="bg-primary text-white">
+    <q-header class="bg-dark text-white">
       <q-toolbar>
         <q-btn round flat @click="drawer = !drawer">
           <q-avatar>

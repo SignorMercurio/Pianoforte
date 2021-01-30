@@ -56,23 +56,16 @@
                 </q-chip>
               </q-td>
               <q-td key="op" :props="props">
-                <q-btn
-                  flat
-                  icon="more_horiz"
-                  color="info"
+                <crud-btn
+                  type="info"
                   @click="
                     $router.push({
                       name: `${parent}Scan`,
                       params: { scan: props.row }
                     })
                   "
-                ></q-btn>
-                <q-btn
-                  flat
-                  icon="delete"
-                  color="negative"
-                  @click="del(props.row.id)"
-                ></q-btn>
+                />
+                <crud-btn type="del" @click="del(props.row.id)" />
               </q-td>
             </q-tr>
           </template>
@@ -88,6 +81,7 @@
 <script lang="ts">
 import { defineComponent, inject } from '@vue/composition-api'
 import module from './Module.vue'
+import crudBtn from './Buttons/CrudBtn.vue'
 import actionBtn from './Buttons/ActionBtn.vue'
 import { fmtTime, str2color } from './utils'
 
@@ -95,6 +89,7 @@ export default defineComponent({
   name: 'scanRes',
   components: {
     module,
+    crudBtn,
     actionBtn
   },
   props: {
