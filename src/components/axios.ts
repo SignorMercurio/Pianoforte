@@ -153,10 +153,15 @@ class MainApi extends HttpClient {
   public deletePort = (id: number) => this.instance.delete(`ports?id=${id}`)
   public deletePortAll = (scan_id: number) =>
     this.instance.delete(`ports/all?scan_id=${scan_id}`)
-  public scanPort = (project_id: number, target: string, ports: string) =>
+  public scanPort = (
+    project_id: number,
+    target: string,
+    ports: string,
+    args: string
+  ) =>
     this.instance.post<number>(
       `ports/scan?project_id=${project_id}&target=${target}`,
-      { ports }
+      { ports, args }
     )
 }
 

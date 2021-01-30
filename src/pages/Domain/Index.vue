@@ -49,7 +49,7 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Domains" icon="dns" :options="options"></scan-res>
+    <scan-res parent="Domains" icon="dns" :options="options" />
   </q-page>
 </template>
 

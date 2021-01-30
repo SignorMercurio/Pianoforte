@@ -50,7 +50,7 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Assets" icon="web" :options="options"></scan-res>
+    <scan-res parent="Assets" icon="web" :options="options" />
   </q-page>
 </template>
 

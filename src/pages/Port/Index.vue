@@ -43,7 +43,11 @@
         <q-card-section>
           <q-slide-transition appear>
             <div v-show="show_advanced">
-              <q-input outlined label="Options"></q-input>
+              <q-input
+                outlined
+                label="Command Line Arguments"
+                v-model="args"
+              ></q-input>
             </div>
           </q-slide-transition>
         </q-card-section>
@@ -59,7 +63,7 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Ports" icon="donut_large" :options="options"></scan-res>
+    <scan-res parent="Ports" icon="donut_large" :options="options" />
   </q-page>
 </template>
 
@@ -93,6 +97,7 @@ export default defineComponent({
       target,
       project_id,
       show_advanced,
+      args,
       form,
       formSubmit
     } = useScan(store)
@@ -103,7 +108,8 @@ export default defineComponent({
       const code = await api.scanPort(
         project_id.value,
         target.value,
-        ports.value
+        ports.value,
+        args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
