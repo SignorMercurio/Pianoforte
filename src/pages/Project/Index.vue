@@ -11,31 +11,21 @@
 
               <q-item-section side>
                 <div class="q-gutter-sm">
-                  <q-btn
-                    flat
-                    icon="create"
-                    color="primary"
-                    @click="edit(item)"
-                  ></q-btn>
-                  <q-btn
-                    flat
-                    icon="more_horiz"
-                    color="info"
+                  <crud-btn @click="edit(item)" />
+
+                  <crud-btn
+                    type="info"
                     :to="`/projects/detail?id=${item.id}`"
-                  ></q-btn
-                  ><q-btn
-                    flat
-                    icon="delete"
-                    color="negative"
-                    @click="del(item.id)"
-                  ></q-btn>
+                  />
+
+                  <crud-btn type="del" @click="del(item.id)" />
                 </div>
               </q-item-section>
             </q-item>
           </q-list>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn push color="primary" icon="add" @click="add"></q-btn>
+          <action-btn @click="add" />
         </q-card-actions>
       </template>
     </module>
@@ -77,6 +67,8 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
+import crudBtn from 'components/Buttons/CrudBtn.vue'
+import actionBtn from 'components/Buttons/ActionBtn.vue'
 import { Project } from 'src/models/project'
 import { Dialog } from 'quasar'
 
@@ -127,7 +119,9 @@ function useDialog() {
 
 export default defineComponent({
   components: {
-    module
+    module,
+    crudBtn,
+    actionBtn
   },
   setup() {
     const { projects, getProjects, del } = useList()

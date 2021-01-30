@@ -7,6 +7,7 @@ import { ProjectCreate, Project } from 'src/models/project'
 import { Scan } from 'src/models/scan'
 import { Asset } from 'src/models/asset'
 import { Domain } from 'src/models/domain'
+import { Port } from 'src/models/port'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -145,6 +146,17 @@ class MainApi extends HttpClient {
   public scanDomain = (project_id: number, target: string) =>
     this.instance.post<number>(
       `domains/scan?project_id=${project_id}&target=${target}`
+    )
+
+  public getPorts = (scan_id: number, keyword?: string) =>
+    this.instance.get<Port[]>(`ports/all?scan_id=${scan_id}&keyword=${keyword}`)
+  public deletePort = (id: number) => this.instance.delete(`ports?id=${id}`)
+  public deletePortAll = (scan_id: number) =>
+    this.instance.delete(`ports/all?scan_id=${scan_id}`)
+  public scanPort = (project_id: number, target: string, ports: string) =>
+    this.instance.post<number>(
+      `ports/scan?project_id=${project_id}&target=${target}`,
+      { ports }
     )
 }
 

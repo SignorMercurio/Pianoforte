@@ -10,3 +10,4 @@
   - feat(Asset): Add basic logic of asset discovery
   - feat(Domain): Add basic logic of subdomain enumeration
   - feat(Asset, Domain): Capture enter key & Make all sorts of scanning async
+  - feat(Port): Add basic logic of port scanning

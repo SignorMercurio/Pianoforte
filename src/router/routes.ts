@@ -22,7 +22,7 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'assets/scan',
-        name: 'AssetScan',
+        name: 'AssetsScan',
         component: () => import('pages/Asset/Scan.vue')
       },
       {
@@ -31,8 +31,17 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'domains/scan',
-        name: 'DomainScan',
+        name: 'DomainsScan',
         component: () => import('pages/Domain/Scan.vue')
+      },
+      {
+        path: 'ports',
+        component: () => import('pages/Port/Index.vue')
+      },
+      {
+        path: 'ports/scan',
+        name: 'PortsScan',
+        component: () => import('pages/Port/Scan.vue')
       }
     ]
   },

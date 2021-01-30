@@ -92,7 +92,7 @@ function useDrawer() {
       route: '/projects'
     },
     {
-      icon: 'web_asset',
+      icon: 'web',
       label: 'Assets',
       route: '/assets'
     },
@@ -100,6 +100,11 @@ function useDrawer() {
       icon: 'dns',
       label: 'Domains',
       route: '/domains'
+    },
+    {
+      icon: 'donut_large',
+      label: 'Ports',
+      route: '/ports'
     },
     {
       icon: 'settings',

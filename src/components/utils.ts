@@ -29,6 +29,12 @@ export function str2color(status: string) {
   else return 'green'
 }
 
+export function protocol2color(protocol: string) {
+  if (protocol === 'tcp') return 'secondary'
+  else if (protocol === 'udp') return 'orange'
+  else return 'grey'
+}
+
 export function fmtTime(time: string): string {
   return new Date(time).toLocaleString('zh-cn', {
     hour12: false

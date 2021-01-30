@@ -1,4 +1,7 @@
 import { Project } from './project'
+import { onMounted, ref } from '@vue/composition-api'
+import { MainApi } from 'components/axios'
+import { Dialog } from 'quasar'
 
 interface Scan {
   id: number
@@ -52,4 +55,62 @@ const col = [
   }
 ]
 
-export { Scan, col }
+function useScan(store: any) {
+  const options = ref<Project[]>(store.getters['project/getProjects'])
+
+  const target = ref('')
+  const project_id = ref(1)
+  const show_advanced = ref(false)
+  const form = ref()
+
+  function formSubmit() {
+    form.value.submit()
+  }
+
+  return { options, target, project_id, show_advanced, form, formSubmit }
+}
+
+function useTable(api: MainApi, type: string) {
+  const loading = ref(true)
+  const pagination = ref({
+    page: 1,
+    rowsPerPage: 10
+  })
+  const columns = ref(col)
+  const data = ref<Scan[]>([])
+  const project_id_filter = ref(1)
+  const keyword_filter = ref('')
+  const getScans = async () => {
+    loading.value = true
+    data.value = await api.getScans(
+      project_id_filter.value,
+      type,
+      keyword_filter.value
+    )
+    loading.value = false
+  }
+
+  onMounted(getScans)
+
+  function del(id: number) {
+    Dialog.create({
+      title: 'Confirm',
+      message: 'Delete this scan?'
+    }).onOk(() => {
+      api.deleteScan(id).then(getScans)
+    })
+  }
+
+  return {
+    loading,
+    pagination,
+    columns,
+    data,
+    project_id_filter,
+    keyword_filter,
+    getScans,
+    del
+  }
+}
+
+export { Scan, useScan, useTable }

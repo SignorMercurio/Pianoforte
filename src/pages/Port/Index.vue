@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Domains" icon="dns" name="Subdomain Enumerating">
+    <module parent="Ports" icon="donut_large" name="Scanning">
       <template v-slot:card>
-        <q-card-section>
+        <q-card-section class="q-gutter-y-md">
           <q-form
             ref="form"
             @submit="scan"
@@ -22,7 +22,7 @@
             <q-input
               class="col-6"
               outlined
-              label="Domain name"
+              label="Target hostnames, IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
               lazy-rules
@@ -30,14 +30,24 @@
             >
             </q-input>
           </q-form>
+          <q-input
+            outlined
+            label="Port ranges"
+            v-model="ports"
+            :hint="portsHint"
+            lazy-rules
+            :rules="[val => !!val || 'Required *']"
+          >
+          </q-input>
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
             <div v-show="show_advanced">
-              <q-input outlined label="Command Line Arguments"></q-input>
+              <q-input outlined label="Options"></q-input>
             </div>
           </q-slide-transition>
         </q-card-section>
+
         <q-card-actions align="right">
           <action-btn
             color="orange"
@@ -49,16 +59,16 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Domains" icon="dns" :options="options"></scan-res>
+    <scan-res parent="Ports" icon="donut_large" :options="options"></scan-res>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from '@vue/composition-api'
+import { defineComponent, provide, ref } from '@vue/composition-api'
+import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
-import { MainApi } from 'components/axios'
 import { useScan, useTable } from 'src/models/scan'
 import { success } from 'components/utils'
 
@@ -72,8 +82,12 @@ export default defineComponent({
   },
   setup(_, { root }) {
     const store = root.$store
-    const targetHint = 'e.g. example.com; hackerone.com'
-
+    const targetHint =
+      'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
+    const portsHint = 'e.g. 22; 1-65535; U:53,111,137,T:21-25,80,139,8080,S:9'
+    const ports = ref(
+      '21,22,80,81,88,443,445,3000,3306,3389,4443,5000,7001,8000,8080,8081,8088,8443,8888,9000,9200,U:137,161,1900,5353'
+    )
     const {
       options,
       target,
@@ -82,12 +96,15 @@ export default defineComponent({
       form,
       formSubmit
     } = useScan(store)
-
-    const table = useTable(api, 'Subdomain')
+    const table = useTable(api, 'Port')
     const { project_id_filter, getScans } = table
 
     async function scan() {
-      const code = await api.scanDomain(project_id.value, target.value)
+      const code = await api.scanPort(
+        project_id.value,
+        target.value,
+        ports.value
+      )
       if (code) {
         success(`Scanning task #${code} submitted`)
         project_id_filter.value = project_id.value
@@ -101,6 +118,8 @@ export default defineComponent({
 
     return {
       targetHint,
+      portsHint,
+      ports,
       options,
       target,
       project_id,

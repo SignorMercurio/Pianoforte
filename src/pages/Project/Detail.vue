@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Assets" icon="web_asset" name="List"></module>
+    <module parent="Assets" icon="web" name="List"></module>
   </q-page>
 </template>
 
