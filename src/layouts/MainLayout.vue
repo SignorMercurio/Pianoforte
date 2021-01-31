@@ -73,7 +73,7 @@ function useAccount(store: any, router: any) {
   })
 
   function logout() {
-    store.dispatch('account/Logout')
+    store.commit('account/logout')
     success('Logout successfully')
     setTimeout(() => {
       router.push('/login')
@@ -105,6 +105,11 @@ function useDrawer() {
       icon: 'donut_large',
       label: 'Ports',
       route: '/ports'
+    },
+    {
+      icon: 'folder',
+      label: 'Directories',
+      route: '/dirs'
     },
     {
       icon: 'settings',

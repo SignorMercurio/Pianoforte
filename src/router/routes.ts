@@ -42,6 +42,15 @@ const routes: RouteConfig[] = [
         path: 'ports/scan',
         name: 'PortsScan',
         component: () => import('pages/Port/Scan.vue')
+      },
+      {
+        path: 'dirs',
+        component: () => import('pages/Dir/Index.vue')
+      },
+      {
+        path: 'dirs/scan',
+        name: 'DirsScan',
+        component: () => import('pages/Dir/Scan.vue')
       }
     ]
   },

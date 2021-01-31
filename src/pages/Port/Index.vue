@@ -130,6 +130,7 @@ export default defineComponent({
       target,
       project_id,
       show_advanced,
+      args,
       form,
       formSubmit,
       scan

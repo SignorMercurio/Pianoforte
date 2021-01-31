@@ -2,11 +2,13 @@ import { MutationTree } from 'vuex'
 import { AccountStateInterface } from './state'
 
 const mutation: MutationTree<AccountStateInterface> = {
-  setToken(state: AccountStateInterface, token: string) {
+  login(state: AccountStateInterface, token: string) {
     state.token = token
+    sessionStorage.setItem('token', token)
   },
-  clearToken(state: AccountStateInterface) {
+  logout(state: AccountStateInterface) {
     state.token = ''
+    sessionStorage.removeItem('token')
   }
 }
 

@@ -1,8 +1,8 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Assets" icon="web" name="Discovery">
+    <module parent="Dirs" icon="folder" name="Directory Bruteforcing">
       <template v-slot:card>
-        <q-card-section>
+        <q-card-section class="q-gutter-y-md">
           <q-form
             ref="form"
             @submit="scan"
@@ -22,7 +22,7 @@
             <q-input
               class="col-6"
               outlined
-              label="Target hostnames, IP addresses, networks, etc."
+              label="Target URL"
               v-model="target"
               :hint="targetHint"
               lazy-rules
@@ -30,6 +30,15 @@
             >
             </q-input>
           </q-form>
+          <q-input
+            outlined
+            label="Extensions"
+            v-model="ext"
+            :hint="extHint"
+            lazy-rules
+            :rules="[val => !!val || 'Required *']"
+          >
+          </q-input>
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
@@ -42,7 +51,6 @@
             </div>
           </q-slide-transition>
         </q-card-section>
-
         <q-card-actions align="right">
           <action-btn
             color="orange"
@@ -54,14 +62,14 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Assets" icon="web" :options="options" />
+    <scan-res parent="Dirs" icon="folder" :options="options" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from '@vue/composition-api'
+import { defineComponent, provide, ref } from '@vue/composition-api'
 import module from 'components/Module.vue'
-import actionBtn from 'src/components/Buttons/ActionBtn.vue'
+import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
 import { MainApi } from 'components/axios'
 import { useScan, useTable } from 'src/models/scan'
@@ -77,8 +85,10 @@ export default defineComponent({
   },
   setup(_, { root }) {
     const store = root.$store
-    const targetHint =
-      'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
+    const targetHint = 'e.g. https://example.com; https://hackerone.com'
+    const extHint = 'e.g. php,html,js; php,asp,aspx,jsp,bak,zip,tgz'
+    const ext = ref('php')
+
     const {
       options,
       target,
@@ -88,13 +98,15 @@ export default defineComponent({
       form,
       formSubmit
     } = useScan(store)
-    const table = useTable(api, 'Asset')
+
+    const table = useTable(api, 'Dir')
     const { project_id_filter, getScans } = table
 
     async function scan() {
-      const code = await api.scanAsset(
+      const code = await api.scanDir(
         project_id.value,
         target.value,
+        ext.value,
         args.value
       )
       if (code) {
@@ -110,6 +122,8 @@ export default defineComponent({
 
     return {
       targetHint,
+      extHint,
+      ext,
       options,
       target,
       project_id,

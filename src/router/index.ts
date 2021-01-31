@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import { Store } from 'vuex'
 import routes from './routes'
 import { Notify } from 'quasar'
-import { AccountStateInterface } from 'src/store/module-account/state'
 import { StateInterface } from 'src/store'
 
 /*
@@ -11,7 +10,7 @@ import { StateInterface } from 'src/store'
  * directly export the Router instantiation
  */
 
-export default route<Store<StateInterface>>(function({ Vue }) {
+export default route<Store<StateInterface>>(function({ store, Vue }) {
   Vue.use(VueRouter)
 
   const Router = new VueRouter({
@@ -27,10 +26,7 @@ export default route<Store<StateInterface>>(function({ Vue }) {
 
   Router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.auth)) {
-      const { token } =
-        (JSON.parse(
-          sessionStorage.getItem('state') as string
-        ) as AccountStateInterface) || {}
+      const token = sessionStorage.getItem('token')
       if (!token) {
         Notify.create({
           type: 'warning',

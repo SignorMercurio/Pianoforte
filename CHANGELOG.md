@@ -13,3 +13,4 @@
   - feat(Port): Add basic logic of port scanning
   - style(Asset, Domain, Port): Add tooltips for buttons
   - feat(Port): Experimenting cmd line args
+  - feat(Dir): Add basic logic of directory bruteforcing

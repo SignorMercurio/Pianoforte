@@ -79,15 +79,20 @@ export default defineComponent({
       target,
       project_id,
       show_advanced,
+      args,
       form,
       formSubmit
     } = useScan(store)
 
-    const table = useTable(api, 'Subdomain')
+    const table = useTable(api, 'Domain')
     const { project_id_filter, getScans } = table
 
     async function scan() {
-      const code = await api.scanDomain(project_id.value, target.value)
+      const code = await api.scanDomain(
+        project_id.value,
+        target.value,
+        args.value
+      )
       if (code) {
         success(`Scanning task #${code} submitted`)
         project_id_filter.value = project_id.value
@@ -105,6 +110,7 @@ export default defineComponent({
       target,
       project_id,
       show_advanced,
+      args,
       form,
       formSubmit,
       scan

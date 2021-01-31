@@ -1,13 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Notify } from 'quasar'
 
-import { AccountStateInterface } from 'src/store/module-account/state'
 import { Token, User, UserCreate } from 'src/models/user'
 import { ProjectCreate, Project } from 'src/models/project'
 import { Scan } from 'src/models/scan'
 import { Asset } from 'src/models/asset'
 import { Domain } from 'src/models/domain'
 import { Port } from 'src/models/port'
+import { Dir } from 'src/models/dir'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -95,10 +95,7 @@ class MainApi extends HttpClient {
   }
 
   private _handleRequest = (config: AxiosRequestConfig) => {
-    const { token } =
-      (JSON.parse(
-        sessionStorage.getItem('state') as string
-      ) as AccountStateInterface) || {}
+    const token = sessionStorage.getItem('token')
     config.headers['Authorization'] = `Bearer ${token}`
 
     return config
@@ -131,9 +128,10 @@ class MainApi extends HttpClient {
   public deleteAsset = (id: number) => this.instance.delete(`assets?id=${id}`)
   public deleteAssetAll = (scan_id: number) =>
     this.instance.delete(`assets/all?scan_id=${scan_id}`)
-  public scanAsset = (project_id: number, target: string) =>
+  public scanAsset = (project_id: number, target: string, args: String) =>
     this.instance.post<number>(
-      `assets/scan?project_id=${project_id}&target=${target}`
+      `assets/scan?project_id=${project_id}&target=${target}`,
+      { args }
     )
 
   public getDomains = (scan_id: number, keyword?: string, alive?: boolean) =>
@@ -143,9 +141,10 @@ class MainApi extends HttpClient {
   public deleteDomain = (id: number) => this.instance.delete(`domains?id=${id}`)
   public deleteDomainAll = (scan_id: number) =>
     this.instance.delete(`domains/all?scan_id=${scan_id}`)
-  public scanDomain = (project_id: number, target: string) =>
+  public scanDomain = (project_id: number, target: string, args: String) =>
     this.instance.post<number>(
-      `domains/scan?project_id=${project_id}&target=${target}`
+      `domains/scan?project_id=${project_id}&target=${target}`,
+      { args }
     )
 
   public getPorts = (scan_id: number, keyword?: string) =>
@@ -162,6 +161,24 @@ class MainApi extends HttpClient {
     this.instance.post<number>(
       `ports/scan?project_id=${project_id}&target=${target}`,
       { ports, args }
+    )
+
+  public getDirs = (scan_id: number, keyword?: string, alive?: boolean) =>
+    this.instance.get<Dir[]>(
+      `dirs/all?scan_id=${scan_id}&keyword=${keyword}&alive=${alive}`
+    )
+  public deleteDir = (id: number) => this.instance.delete(`dirs?id=${id}`)
+  public deleteDirAll = (scan_id: number) =>
+    this.instance.delete(`dirs/all?scan_id=${scan_id}`)
+  public scanDir = (
+    project_id: number,
+    target: string,
+    ext: string,
+    args: string
+  ) =>
+    this.instance.post<number>(
+      `dirs/scan?project_id=${project_id}&target=${target}`,
+      { ext, args }
     )
 }
 
