@@ -112,6 +112,16 @@ function useDrawer() {
       route: '/dirs'
     },
     {
+      icon: 'fingerprint',
+      label: 'Fingerprints',
+      route: '/fingers'
+    },
+    {
+      icon: 'bug_report',
+      label: 'Vulnerabilities',
+      route: '/vulns'
+    },
+    {
       icon: 'settings',
       label: 'Settings',
       route: '/settings'

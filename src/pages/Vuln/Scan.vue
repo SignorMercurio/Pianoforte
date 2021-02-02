@@ -2,7 +2,7 @@
   <q-page class="q-pa-lg">
     <scan-info :scan="scan" />
 
-    <module parent="Scan" icon="find_in_page" name="Directories">
+    <module parent="Scan" icon="find_in_page" name="Vulnerabilities">
       <template v-slot:card>
         <q-card-section>
           <q-table
@@ -13,19 +13,19 @@
             :loading="loading"
           >
             <template v-slot:top>
-              <q-toggle
-                label="Accessible Directories Only"
+              <!-- <q-toggle
+                label="Alive Vulns Only"
                 v-model="alive_filter"
-                @input="getDirs"
-              ></q-toggle>
+                @input="getVulns"
+              ></q-toggle> -->
               <q-space></q-space>
               <q-input
                 class="col-3"
                 outlined
-                label="Search path"
+                label="Search vulnerability type"
                 v-model="keyword_filter"
                 debounce="300"
-                @input="getDirs"
+                @input="getVulns"
               >
                 <template v-slot:prepend>
                   <q-icon name="search"></q-icon>
@@ -37,36 +37,36 @@
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="path" :props="props">
+                <q-td key="type" :props="props">
+                  {{ props.row.type }}
+                </q-td>
+                <q-td key="risk" :props="props">
+                  <q-chip
+                    v-if="props.row.risk"
+                    size="sm"
+                    :color="status2color(props.row.risk)"
+                    >{{ props.row.risk }}</q-chip
+                  >
+                </q-td>
+                <q-td key="url" :props="props">
                   <q-btn
                     size="sm"
                     color="blue"
-                    :label="props.row.path"
+                    :label="props.row.url"
                     no-caps
                     flat
                     dense
                     type="a"
-                    :href="scan.target + props.row.path"
+                    :href="props.row.url"
                     target="_blank"
-                  />
+                  ></q-btn>
                 </q-td>
-                <q-td key="status" :props="props">
-                  <q-chip
-                    v-if="props.row.status"
-                    size="sm"
-                    :color="status2color(props.row.status)"
-                    >{{ props.row.status }}</q-chip
-                  >
-                </q-td>
-                <q-td key="length" :props="props">
-                  {{ props.row.length }}
-                </q-td>
-                <q-td key="redirect" :props="props">
-                  {{ props.row.redirect }}
-                  <q-tooltip v-if="props.row.redirect">{{
-                    props.row.redirect
+                <!-- <q-td key="title" :props="props">
+                  {{ props.row.title }}
+                  <q-tooltip v-if="props.row.title">{{
+                    props.row.title
                   }}</q-tooltip>
-                </q-td>
+                </q-td> -->
                 <q-td key="op" :props="props">
                   <crud-btn type="del" @click="del(props.row.id)" />
                 </q-td>
@@ -75,7 +75,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <action-btn icon="update" tip="Refresh" @click="getDirs" />
+          <action-btn icon="update" tip="Refresh" @click="getVulns" />
           <action-btn
             color="negative"
             icon="delete_sweep"
@@ -95,7 +95,7 @@ import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
-import { Dir, col } from 'src/models/dir'
+import { Vuln, col } from 'src/models/vuln'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
 import { status2color } from 'components/utils'
@@ -109,36 +109,32 @@ function useTable(scan_id: number) {
     rowsPerPage: 10
   })
   const columns = ref(col)
-  const data = ref<Dir[]>([])
+  const data = ref<Vuln[]>([])
   const keyword_filter = ref('')
-  const alive_filter = ref(false)
-  const getDirs = async () => {
+  // const alive_filter = ref(false)
+  const getVulns = async () => {
     loading.value = true
-    data.value = await api.getDirs(
-      scan_id,
-      keyword_filter.value,
-      alive_filter.value
-    )
+    data.value = await api.getVulns(scan_id, keyword_filter.value)
     loading.value = false
   }
 
-  onMounted(getDirs)
+  onMounted(getVulns)
 
   function del(id: number) {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete this directory?'
+      message: 'Delete this vulnerability?'
     }).onOk(() => {
-      api.deleteDir(id).then(getDirs)
+      api.deleteVuln(id).then(getVulns)
     })
   }
 
   function del_all() {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete all directories of this scan?'
+      message: 'Delete all vulnerabilities of this scan?'
     }).onOk(() => {
-      api.deleteDirAll(scan_id).then(getDirs)
+      api.deleteVulnAll(scan_id).then(getVulns)
     })
   }
 
@@ -148,8 +144,7 @@ function useTable(scan_id: number) {
     columns,
     data,
     keyword_filter,
-    alive_filter,
-    getDirs,
+    getVulns,
     del,
     del_all,
     status2color

@@ -8,6 +8,8 @@ import { Asset } from 'src/models/asset'
 import { Domain } from 'src/models/domain'
 import { Port } from 'src/models/port'
 import { Dir } from 'src/models/dir'
+import { Finger } from 'src/models/finger'
+import { Vuln } from 'src/models/vuln'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -179,6 +181,28 @@ class MainApi extends HttpClient {
     this.instance.post<number>(
       `dirs/scan?project_id=${project_id}&target=${target}`,
       { ext, args }
+    )
+
+  public getFingers = (scan_id: number) =>
+    this.instance.get<Finger[]>(`fingers/all?scan_id=${scan_id}`)
+  public deleteFinger = (id: number) => this.instance.delete(`fingers?id=${id}`)
+  public deleteFingerAll = (scan_id: number) =>
+    this.instance.delete(`fingers/all?scan_id=${scan_id}`)
+  public scanFinger = (project_id: number, target: string, args: String) =>
+    this.instance.post<number>(
+      `fingers/scan?project_id=${project_id}&target=${target}`,
+      { args }
+    )
+
+  public getVulns = (scan_id: number, keyword?: string) =>
+    this.instance.get<Vuln[]>(`vulns/all?scan_id=${scan_id}&keyword=${keyword}`)
+  public deleteVuln = (id: number) => this.instance.delete(`vulns?id=${id}`)
+  public deleteVulnAll = (scan_id: number) =>
+    this.instance.delete(`vulns/all?scan_id=${scan_id}`)
+  public scanVuln = (project_id: number, target: string, args: string) =>
+    this.instance.post<number>(
+      `vulns/scan?project_id=${project_id}&target=${target}`,
+      { args }
     )
 }
 

@@ -1,6 +1,10 @@
 <template>
   <q-page class="q-pa-lg">
-    <module parent="Directories" icon="folder" name="Directory Bruteforcing">
+    <module
+      parent="Fingerprints"
+      icon="fingerprint"
+      name="Application Fingerprinting"
+    >
       <template v-slot:card>
         <q-card-section class="q-gutter-y-md">
           <q-form
@@ -30,15 +34,6 @@
             >
             </q-input>
           </q-form>
-          <q-input
-            outlined
-            label="Extensions"
-            v-model="ext"
-            :hint="extHint"
-            lazy-rules
-            :rules="[val => !!val || 'Required *']"
-          >
-          </q-input>
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
@@ -62,12 +57,12 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Directories" icon="folder" :options="options" />
+    <scan-res parent="Fingerprints" icon="fingerprint" :options="options" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, ref } from '@vue/composition-api'
+import { defineComponent, provide } from '@vue/composition-api'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
@@ -86,8 +81,6 @@ export default defineComponent({
   setup(_, { root }) {
     const store = root.$store
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
-    const extHint = 'e.g. php,html,js; php,asp,aspx,jsp,bak,zip,tgz'
-    const ext = ref('php')
 
     const {
       options,
@@ -99,14 +92,13 @@ export default defineComponent({
       formSubmit
     } = useScan(store)
 
-    const table = useTable(api, 'Dir')
+    const table = useTable(api, 'Finger')
     const { project_id_filter, getScans } = table
 
     async function scan() {
-      const code = await api.scanDir(
+      const code = await api.scanFinger(
         project_id.value,
         target.value,
-        ext.value,
         args.value
       )
       if (code) {
@@ -122,8 +114,6 @@ export default defineComponent({
 
     return {
       targetHint,
-      extHint,
-      ext,
       options,
       target,
       project_id,

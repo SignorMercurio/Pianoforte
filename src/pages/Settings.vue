@@ -1,6 +1,6 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <module parent="Settings" icon="settings" name="Projects">
+  <q-page class="q-pa-lg">
+    <module parent="Settings" icon="settings" name="Network">
       <template v-slot:card>
         <q-card-section> </q-card-section>
       </template>
@@ -9,17 +9,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
+import module from 'components/Module.vue'
+import actionBtn from 'components/Buttons/ActionBtn.vue'
 import { MainApi } from 'components/axios'
 import { success } from 'src/components/utils'
 
 const api = MainApi.getInstance()
 
 export default defineComponent({
+  components: {
+    module,
+    actionBtn
+  },
   setup() {
-    onMounted(async () => {
-      //
-    })
     return {}
   }
 })

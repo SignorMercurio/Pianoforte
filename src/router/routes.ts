@@ -49,8 +49,30 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'dirs/scan',
-        name: 'DirsScan',
+        name: 'DirectoriesScan',
         component: () => import('pages/Dir/Scan.vue')
+      },
+      {
+        path: 'fingers',
+        component: () => import('pages/Finger/Index.vue')
+      },
+      {
+        path: 'fingers/scan',
+        name: 'FingerprintsScan',
+        component: () => import('pages/Finger/Scan.vue')
+      },
+      {
+        path: 'vulns',
+        component: () => import('pages/Vuln/Index.vue')
+      },
+      {
+        path: 'vulns/scan',
+        name: 'VulnerabilitiesScan',
+        component: () => import('pages/Vuln/Scan.vue')
+      },
+      {
+        path: 'settings',
+        component: () => import('pages/Settings.vue')
       }
     ]
   },
