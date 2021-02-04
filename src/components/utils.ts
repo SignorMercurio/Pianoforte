@@ -1,4 +1,4 @@
-import { Notify } from 'quasar'
+import { Notify, copyToClipboard } from 'quasar'
 
 export function success(msg: string, icon = 'check_circle') {
   Notify.create({
@@ -39,4 +39,17 @@ export function fmtTime(time: string): string {
   return new Date(time).toLocaleString('zh-cn', {
     hour12: false
   })
+}
+
+export function copy(str: string) {
+  copyToClipboard(str).then(() => {
+    success('Copied')
+  })
+}
+
+export function full2path(target: string, full_url: string) {
+  if (target.endsWith('/')) {
+    target = target.slice(0, -1)
+  }
+  return full_url.replace(target, '')
 }

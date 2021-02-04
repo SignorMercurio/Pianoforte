@@ -2,7 +2,7 @@
   <q-page class="q-pa-lg">
     <scan-info :scan="scan" />
 
-    <module parent="Scan" icon="find_in_page" name="Fingerprints">
+    <module parent="Scan" icon="find_in_page" name="Endpoints">
       <template v-slot:card>
         <q-card-section>
           <q-table
@@ -12,23 +12,38 @@
             :pagination.sync="pagination"
             :loading="loading"
           >
+            <template v-slot:top>
+              <q-space></q-space>
+              <q-input
+                class="col-3"
+                outlined
+                label="Search path"
+                v-model="keyword_filter"
+                debounce="300"
+                @input="getEndpoints"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="search"></q-icon>
+                </template>
+              </q-input>
+            </template>
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="tool" :props="props">
-                  {{ props.row.tool }}
-                </q-td>
-                <q-td
-                  key="finger"
-                  :props="props"
-                  @click="copy(props.row.finger)"
-                >
-                  {{ props.row.finger }}
-                  <q-tooltip v-if="props.row.finger">{{
-                    props.row.finger
-                  }}</q-tooltip>
+                <q-td key="path" :props="props">
+                  <q-btn
+                    size="sm"
+                    color="blue"
+                    :label="full2path(scan.target, props.row.path)"
+                    no-caps
+                    flat
+                    dense
+                    type="a"
+                    :href="props.row.path"
+                    target="_blank"
+                  />
                 </q-td>
                 <q-td key="op" :props="props">
                   <crud-btn type="del" @click="del(props.row.id)" />
@@ -38,7 +53,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
-          <action-btn icon="update" tip="Refresh" @click="getFingers" />
+          <action-btn icon="update" tip="Refresh" @click="getEndpoints" />
           <action-btn
             color="negative"
             icon="delete_sweep"
@@ -58,10 +73,10 @@ import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
-import { Finger, col } from 'src/models/finger'
+import { Endpoint, col } from 'src/models/endpoint'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
-import { copy } from 'components/utils'
+import { full2path } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -72,30 +87,31 @@ function useTable(scan_id: number) {
     rowsPerPage: 10
   })
   const columns = ref(col)
-  const data = ref<Finger[]>([])
-  const getFingers = async () => {
+  const data = ref<Endpoint[]>([])
+  const keyword_filter = ref('')
+  const getEndpoints = async () => {
     loading.value = true
-    data.value = await api.getFingers(scan_id)
+    data.value = await api.getEndpoints(scan_id, keyword_filter.value)
     loading.value = false
   }
 
-  onMounted(getFingers)
+  onMounted(getEndpoints)
 
   function del(id: number) {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete this fingerprint?'
+      message: 'Delete this endpoint?'
     }).onOk(() => {
-      api.deleteFinger(id).then(getFingers)
+      api.deleteEndpoint(id).then(getEndpoints)
     })
   }
 
   function del_all() {
     Dialog.create({
       title: 'Confirm',
-      message: 'Delete all fingerprints of this scan?'
+      message: 'Delete all endpoints of this scan?'
     }).onOk(() => {
-      api.deleteFingerAll(scan_id).then(getFingers)
+      api.deleteEndpointAll(scan_id).then(getEndpoints)
     })
   }
 
@@ -104,10 +120,11 @@ function useTable(scan_id: number) {
     pagination,
     columns,
     data,
-    getFingers,
+    keyword_filter,
+    getEndpoints,
     del,
     del_all,
-    copy
+    full2path
   }
 }
 

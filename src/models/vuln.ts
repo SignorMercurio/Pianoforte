@@ -1,8 +1,10 @@
 interface Vuln {
   id: number
-  type: string
-  risk: number
   url: string
+  param_key: string
+  param_pos: string
+  param_val: string
+  payload: string
 }
 
 const col = [
@@ -14,75 +16,48 @@ const col = [
     sortable: true
   },
   {
-    name: 'subdomain',
-    label: 'Subdomain',
+    name: 'vuln_type',
+    label: 'Vuln Type',
     align: 'left',
-    field: 'subdomain',
-    sortable: true
-  },
-  {
-    name: 'alive',
-    label: 'Alive',
-    align: 'left',
-    field: 'alive',
-    sortable: true
-  },
-  {
-    name: 'level',
-    label: 'Level',
-    align: 'left',
-    field: 'level',
+    field: 'vuln_type',
     sortable: true
   },
   {
     name: 'url',
     label: 'URL',
     align: 'left',
-    field: 'url',
-    sortable: true
+    field: 'url'
   },
   {
-    name: 'ip',
-    label: 'IP',
+    name: 'param_key',
+    label: 'Param Key',
     align: 'left',
-    field: 'ip',
+    field: 'param_key',
     style: 'max-width: 150px',
-    classes: 'ellipsis',
+    classes: 'ellipsis'
+  },
+  {
+    name: 'param_pos',
+    label: 'Param Position',
+    align: 'left',
+    field: 'param_pos',
     sortable: true
   },
   {
-    name: 'cname',
-    label: 'CNAME',
+    name: 'param_val',
+    label: 'Param Value',
     align: 'left',
-    field: 'cname',
+    field: 'param_val',
     style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
+    classes: 'ellipsis'
   },
   {
-    name: 'status',
-    label: 'Status',
+    name: 'payload',
+    label: 'Payload',
     align: 'left',
-    field: 'status',
-    sortable: true
-  },
-  {
-    name: 'title',
-    label: 'Title',
-    align: 'left',
-    field: 'title',
+    field: 'payload',
     style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
-  },
-  {
-    name: 'banner',
-    label: 'Banner',
-    align: 'left',
-    field: 'banner',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
+    classes: 'ellipsis'
   },
   {
     name: 'op',

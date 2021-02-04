@@ -47,7 +47,11 @@
                     >{{ props.row.protocol }}</q-chip
                   >
                 </q-td>
-                <q-td key="service" :props="props">
+                <q-td
+                  key="service"
+                  :props="props"
+                  @click="copy(props.row.service)"
+                >
                   {{ props.row.service }}
                   <q-tooltip v-if="props.row.service">{{
                     props.row.service
@@ -84,7 +88,7 @@ import scanInfo from 'components/ScanInfo.vue'
 import { Port, col } from 'src/models/port'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
-import { protocol2color } from 'components/utils'
+import { protocol2color, copy } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -132,7 +136,8 @@ function useTable(scan_id: number) {
     getPorts,
     del,
     del_all,
-    protocol2color
+    protocol2color,
+    copy
   }
 }
 

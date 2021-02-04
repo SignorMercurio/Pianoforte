@@ -5,6 +5,11 @@
         <q-card-section> </q-card-section>
       </template>
     </module>
+    <module parent="Settings" icon="settings" name="Tools">
+      <template v-slot:card>
+        <q-card-section> </q-card-section>
+      </template>
+    </module>
   </q-page>
 </template>
 

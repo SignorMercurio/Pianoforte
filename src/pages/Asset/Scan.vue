@@ -52,7 +52,7 @@
                     target="_blank"
                   ></q-btn>
                 </q-td>
-                <q-td key="name" :props="props">
+                <q-td key="name" :props="props" @click="copy(props.row.name)">
                   {{ props.row.name }}
                   <q-tooltip v-if="props.row.name">{{
                     props.row.name
@@ -66,7 +66,11 @@
                     >{{ props.row.status }}</q-chip
                   ></q-td
                 >
-                <q-td key="service" :props="props">
+                <q-td
+                  key="service"
+                  :props="props"
+                  @click="copy(props.row.service)"
+                >
                   {{ props.row.service }}
                   <q-tooltip v-if="props.row.service">{{
                     props.row.service
@@ -75,7 +79,11 @@
                 <!-- <q-td key="domain" :props="props">
                   {{ props.row.domain }}
                 </q-td> -->
-                <q-td key="vendor" :props="props">
+                <q-td
+                  key="vendor"
+                  :props="props"
+                  @click="copy(props.row.vendor)"
+                >
                   {{ props.row.vendor }}
                   <q-tooltip v-if="props.row.vendor">{{
                     props.row.vendor
@@ -112,7 +120,7 @@ import scanInfo from 'components/ScanInfo.vue'
 import { Asset, col } from 'src/models/asset'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
-import { status2color } from 'components/utils'
+import { status2color, copy } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -160,7 +168,8 @@ function useTable(scan_id: number) {
     getAssets,
     del,
     del_all,
-    status2color
+    status2color,
+    copy
   }
 }
 

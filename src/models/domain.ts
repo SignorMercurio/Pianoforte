@@ -30,9 +30,7 @@ const col = [
   {
     name: 'alive',
     label: 'Alive',
-    align: 'left',
-    field: 'alive',
-    sortable: true
+    align: 'left'
   },
   {
     name: 'level',
@@ -44,9 +42,7 @@ const col = [
   {
     name: 'url',
     label: 'URL',
-    align: 'left',
-    field: 'url',
-    sortable: true
+    align: 'left'
   },
   {
     name: 'ip',

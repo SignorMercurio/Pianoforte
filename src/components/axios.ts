@@ -10,6 +10,7 @@ import { Port } from 'src/models/port'
 import { Dir } from 'src/models/dir'
 import { Finger } from 'src/models/finger'
 import { Vuln } from 'src/models/vuln'
+import { Endpoint } from 'src/models/endpoint'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -130,10 +131,10 @@ class MainApi extends HttpClient {
   public deleteAsset = (id: number) => this.instance.delete(`assets?id=${id}`)
   public deleteAssetAll = (scan_id: number) =>
     this.instance.delete(`assets/all?scan_id=${scan_id}`)
-  public scanAsset = (project_id: number, target: string, args: String) =>
+  public scanAsset = (project_id: number, target: string, args: string) =>
     this.instance.post<number>(
       `assets/scan?project_id=${project_id}&target=${target}`,
-      { args }
+      args
     )
 
   public getDomains = (scan_id: number, keyword?: string, alive?: boolean) =>
@@ -143,10 +144,10 @@ class MainApi extends HttpClient {
   public deleteDomain = (id: number) => this.instance.delete(`domains?id=${id}`)
   public deleteDomainAll = (scan_id: number) =>
     this.instance.delete(`domains/all?scan_id=${scan_id}`)
-  public scanDomain = (project_id: number, target: string, args: String) =>
+  public scanDomain = (project_id: number, target: string, args: string) =>
     this.instance.post<number>(
       `domains/scan?project_id=${project_id}&target=${target}`,
-      { args }
+      args
     )
 
   public getPorts = (scan_id: number, keyword?: string) =>
@@ -188,10 +189,29 @@ class MainApi extends HttpClient {
   public deleteFinger = (id: number) => this.instance.delete(`fingers?id=${id}`)
   public deleteFingerAll = (scan_id: number) =>
     this.instance.delete(`fingers/all?scan_id=${scan_id}`)
-  public scanFinger = (project_id: number, target: string, args: String) =>
+  public scanFinger = (project_id: number, target: string, args: string) =>
     this.instance.post<number>(
       `fingers/scan?project_id=${project_id}&target=${target}`,
-      { args }
+      args
+    )
+
+  public getEndpoints = (scan_id: number, keyword?: string) =>
+    this.instance.get<Endpoint[]>(
+      `endpoints/all?scan_id=${scan_id}&keyword=${keyword}`
+    )
+  public deleteEndpoint = (id: number) =>
+    this.instance.delete(`endpoints?id=${id}`)
+  public deleteEndpointAll = (scan_id: number) =>
+    this.instance.delete(`endpoints/all?scan_id=${scan_id}`)
+  public scanEndpoint = (
+    project_id: number,
+    target: string,
+    args: string,
+    args_hak: string
+  ) =>
+    this.instance.post<number>(
+      `endpoints/scan?project_id=${project_id}&target=${target}`,
+      { args, args_hak }
     )
 
   public getVulns = (scan_id: number, keyword?: string) =>
@@ -199,10 +219,9 @@ class MainApi extends HttpClient {
   public deleteVuln = (id: number) => this.instance.delete(`vulns?id=${id}`)
   public deleteVulnAll = (scan_id: number) =>
     this.instance.delete(`vulns/all?scan_id=${scan_id}`)
-  public scanVuln = (project_id: number, target: string, args: string) =>
+  public scanVuln = (project_id: number, target: string) =>
     this.instance.post<number>(
-      `vulns/scan?project_id=${project_id}&target=${target}`,
-      { args }
+      `vulns/scan?project_id=${project_id}&target=${target}`
     )
 }
 

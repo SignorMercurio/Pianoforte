@@ -15,3 +15,4 @@
   - feat(Port): Experimenting cmd line args
   - feat(Dir): Add basic logic of directory bruteforcing
   - feat(Finger): Add basic logic of application fingerprinting
+  - feat(Endpoint): Add basic logic of endpoint discovery

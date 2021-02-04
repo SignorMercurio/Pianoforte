@@ -62,6 +62,15 @@ const routes: RouteConfig[] = [
         component: () => import('pages/Finger/Scan.vue')
       },
       {
+        path: 'endpoints',
+        component: () => import('pages/Endpoint/Index.vue')
+      },
+      {
+        path: 'endpoints/scan',
+        name: 'EndpointsScan',
+        component: () => import('pages/Endpoint/Scan.vue')
+      },
+      {
         path: 'vulns',
         component: () => import('pages/Vuln/Index.vue')
       },

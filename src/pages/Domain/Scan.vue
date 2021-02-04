@@ -64,11 +64,11 @@
                     target="_blank"
                   ></q-btn>
                 </q-td>
-                <q-td key="ip" :props="props">
+                <q-td key="ip" :props="props" @click="copy(props.row.ip)">
                   {{ props.row.ip }}
                   <q-tooltip v-if="props.row.ip">{{ props.row.ip }}</q-tooltip>
                 </q-td>
-                <q-td key="cname" :props="props">
+                <q-td key="cname" :props="props" @click="copy(props.row.cname)">
                   {{ props.row.cname }}
                   <q-tooltip v-if="props.row.cname">{{
                     props.row.cname
@@ -82,13 +82,17 @@
                     >{{ props.row.status }}</q-chip
                   >
                 </q-td>
-                <q-td key="title" :props="props">
+                <q-td key="title" :props="props" @click="copy(props.row.title)">
                   {{ props.row.title }}
                   <q-tooltip v-if="props.row.title">{{
                     props.row.title
                   }}</q-tooltip>
                 </q-td>
-                <q-td key="banner" :props="props">
+                <q-td
+                  key="banner"
+                  :props="props"
+                  @click="copy(props.row.banner)"
+                >
                   {{ props.row.banner }}
                   <q-tooltip v-if="props.row.banner">{{
                     props.row.banner
@@ -125,7 +129,7 @@ import scanInfo from 'components/ScanInfo.vue'
 import { Domain, col } from 'src/models/domain'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
-import { status2color } from 'components/utils'
+import { status2color, copy } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -179,7 +183,8 @@ function useTable(scan_id: number) {
     getDomains,
     del,
     del_all,
-    status2color
+    status2color,
+    copy
   }
 }
 

@@ -37,8 +37,7 @@ const col = [
     name: 'url',
     label: 'URL',
     align: 'left',
-    field: 'url',
-    sortable: true
+    field: 'url'
   },
   {
     name: 'name',

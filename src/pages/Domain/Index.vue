@@ -34,7 +34,11 @@
         <q-card-section>
           <q-slide-transition appear>
             <div v-show="show_advanced">
-              <q-input outlined label="Command Line Arguments"></q-input>
+              <q-input
+                outlined
+                label="Command Line Arguments"
+                v-model="args"
+              ></q-input>
             </div>
           </q-slide-transition>
         </q-card-section>

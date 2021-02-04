@@ -1,12 +1,8 @@
 <template>
   <q-page class="q-pa-lg">
-    <module
-      parent="Vulnerabilities"
-      icon="bug_report"
-      name="Vulnerabilities Scanning"
-    >
+    <module parent="Endpoints" icon="link" name="Endpoint Discovery">
       <template v-slot:card>
-        <q-card-section>
+        <q-card-section class="q-gutter-y-md">
           <q-form
             ref="form"
             @submit="scan"
@@ -38,7 +34,12 @@
         <q-card-section>
           <q-slide-transition appear>
             <div v-show="show_advanced">
-              <q-input outlined label="Command Line Arguments" v-model="args" />
+              <q-input outlined label="Rad Arguments" v-model="args"></q-input>
+              <q-input
+                outlined
+                label="Hakrawler Arguments"
+                v-model="args_hak"
+              ></q-input>
             </div>
           </q-slide-transition>
         </q-card-section>
@@ -53,12 +54,12 @@
         </q-card-actions>
       </template>
     </module>
-    <scan-res parent="Vulnerabilities" icon="bug_report" :options="options" />
+    <scan-res parent="Endpoints" icon="link" :options="options" />
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from '@vue/composition-api'
+import { defineComponent, provide, ref } from '@vue/composition-api'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
@@ -77,6 +78,7 @@ export default defineComponent({
   setup(_, { root }) {
     const store = root.$store
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
+    const args_hak = ref('')
 
     const {
       options,
@@ -88,11 +90,16 @@ export default defineComponent({
       formSubmit
     } = useScan(store)
 
-    const table = useTable(api, 'Vuln')
+    const table = useTable(api, 'Endpoint')
     const { project_id_filter, getScans } = table
 
     async function scan() {
-      const code = await api.scanVuln(project_id.value, target.value)
+      const code = await api.scanEndpoint(
+        project_id.value,
+        target.value,
+        args.value,
+        args_hak.value
+      )
       if (code) {
         success(`Scanning task #${code} submitted`)
         project_id_filter.value = project_id.value
@@ -106,6 +113,7 @@ export default defineComponent({
 
     return {
       targetHint,
+      args_hak,
       options,
       target,
       project_id,

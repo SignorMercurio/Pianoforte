@@ -44,7 +44,7 @@
               <q-td key="project" :props="props">
                 {{ props.row.project.name }}
               </q-td>
-              <q-td key="target" :props="props">
+              <q-td key="target" :props="props" @click="copy(props.row.target)">
                 {{ props.row.target }}
               </q-td>
               <q-td key="created_at" :props="props">
@@ -83,7 +83,7 @@ import { defineComponent, inject } from '@vue/composition-api'
 import module from './Module.vue'
 import crudBtn from './Buttons/CrudBtn.vue'
 import actionBtn from './Buttons/ActionBtn.vue'
-import { fmtTime, str2color } from './utils'
+import { fmtTime, str2color, copy } from './utils'
 
 export default defineComponent({
   name: 'scanRes',
@@ -126,7 +126,8 @@ export default defineComponent({
       getScans,
       del,
       fmtTime,
-      str2color
+      str2color,
+      copy
     }
   }
 })

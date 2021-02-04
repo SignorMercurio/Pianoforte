@@ -37,36 +37,58 @@
                 <q-td key="id" :props="props">
                   {{ props.row.id }}
                 </q-td>
-                <q-td key="type" :props="props">
-                  {{ props.row.type }}
-                </q-td>
-                <q-td key="risk" :props="props">
-                  <q-chip
-                    v-if="props.row.risk"
-                    size="sm"
-                    :color="status2color(props.row.risk)"
-                    >{{ props.row.risk }}</q-chip
-                  >
+                <q-td key="vuln_type" :props="props">
+                  {{ props.row.vuln_type }}
                 </q-td>
                 <q-td key="url" :props="props">
                   <q-btn
                     size="sm"
                     color="blue"
-                    :label="props.row.url"
+                    style="max-width: 200px"
                     no-caps
                     flat
                     dense
                     type="a"
                     :href="props.row.url"
                     target="_blank"
-                  ></q-btn>
+                  >
+                    <div class="ellipsis">
+                      {{ full2path(scan.target, props.row.url) }}
+                    </div>
+                  </q-btn>
                 </q-td>
-                <!-- <q-td key="title" :props="props">
-                  {{ props.row.title }}
-                  <q-tooltip v-if="props.row.title">{{
-                    props.row.title
+                <q-td
+                  key="param_key"
+                  :props="props"
+                  @click="copy(props.row.param_key)"
+                >
+                  {{ props.row.param_key }}
+                  <q-tooltip v-if="props.row.param_key">{{
+                    props.row.param_key
                   }}</q-tooltip>
-                </q-td> -->
+                </q-td>
+                <q-td key="param_pos" :props="props">
+                  {{ props.row.param_pos }}
+                  <q-tooltip v-if="props.row.param_pos">{{
+                    props.row.param_pos
+                  }}</q-tooltip>
+                </q-td>
+                <q-td
+                  key="param_val"
+                  :props="props"
+                  @click="copy(props.row.param_val)"
+                >
+                  {{ props.row.param_val }}
+                  <q-tooltip v-if="props.row.param_val">{{
+                    props.row.param_val
+                  }}</q-tooltip>
+                </q-td>
+                <q-td key="payload" :props="props">
+                  {{ props.row.payload }}
+                  <q-tooltip v-if="props.row.payload">{{
+                    props.row.payload
+                  }}</q-tooltip>
+                </q-td>
                 <q-td key="op" :props="props">
                   <crud-btn type="del" @click="del(props.row.id)" />
                 </q-td>
@@ -98,7 +120,7 @@ import scanInfo from 'components/ScanInfo.vue'
 import { Vuln, col } from 'src/models/vuln'
 import { Scan } from 'src/models/scan'
 import { Dialog } from 'quasar'
-import { status2color } from 'components/utils'
+import { status2color, copy, full2path } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -147,7 +169,9 @@ function useTable(scan_id: number) {
     getVulns,
     del,
     del_all,
-    status2color
+    status2color,
+    copy,
+    full2path
   }
 }
 

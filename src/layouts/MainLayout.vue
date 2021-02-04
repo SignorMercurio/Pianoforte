@@ -117,6 +117,11 @@ function useDrawer() {
       route: '/fingers'
     },
     {
+      icon: 'link',
+      label: 'Endpoints',
+      route: '/endpoints'
+    },
+    {
       icon: 'bug_report',
       label: 'Vulnerabilities',
       route: '/vulns'
