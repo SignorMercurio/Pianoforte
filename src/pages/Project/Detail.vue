@@ -1,0 +1,172 @@
+<template>
+  <q-page class="q-pa-lg">
+    <module parent="Projects" icon="format_list_numbered" name="Scan Results">
+      <template v-slot:card>
+        <q-card-section>
+          <q-table
+            :rows="rows"
+            :columns="columns"
+            row-key="id"
+            v-model:pagination="pagination"
+            :loading="loading"
+          >
+            <template v-slot:top>
+              <q-select
+                class="col-2"
+                outlined
+                label="Type"
+                :options="options"
+                v-model="type_filter"
+                @update:modelValue="getScans"
+              ></q-select>
+              <q-space></q-space>
+              <q-input
+                class="col-3"
+                outlined
+                label="Search target"
+                v-model="keyword_filter"
+                debounce="300"
+                @update:modelValue="getScans"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="search"></q-icon>
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="id" :props="props">
+                  {{ props.row.id }}
+                </q-td>
+                <q-td key="type" :props="props">
+                  {{ props.row.type }}
+                </q-td>
+                <q-td
+                  key="target"
+                  :props="props"
+                  @click="copy(props.row.target)"
+                >
+                  {{ props.row.target }}
+                </q-td>
+                <q-td key="created_at" :props="props">
+                  {{ fmtTime(props.row.created_at) }}
+                </q-td>
+                <q-td key="status" :props="props">
+                  <q-chip :color="str2color(props.row.status)" size="sm">
+                    {{ props.row.status }}
+                  </q-chip>
+                </q-td>
+                <q-td key="op" :props="props">
+                  <crud-btn type="info" @click="toInfo(props.row)" />
+                  <crud-btn type="del" @click="del(props.row.id)" />
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions align="right">
+          <action-btn icon="update" tip="Refresh" @click="getScans" />
+        </q-card-actions>
+      </template>
+    </module>
+    <module parent="Projects" icon="format_list_numbered" name="Statistics">
+    </module>
+  </q-page>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { MainApi } from 'components/axios'
+import { Scan } from 'src/models/scan'
+import { col } from 'src/models/project'
+import module from 'components/Module.vue'
+import crudBtn from 'components/Buttons/CrudBtn.vue'
+import actionBtn from 'components/Buttons/ActionBtn.vue'
+import { Dialog } from 'quasar'
+import { copy, fmtTime, str2color } from 'components/utils'
+
+const api = MainApi.getInstance()
+
+function useTable(router: any, project_id: string) {
+  const loading = ref(true)
+  const pagination = ref({
+    page: 1,
+    rowsPerPage: 10,
+  })
+  const columns = ref(col)
+  const rows = ref<Scan[]>([])
+  const options = [
+    'All',
+    'Assets',
+    'Domains',
+    'Ports',
+    'Directories',
+    'Fingerprints',
+    'Endpoints',
+    'Vulnerabilities',
+  ]
+  const type_filter = ref('All')
+  const keyword_filter = ref('')
+  const getScans = async () => {
+    loading.value = true
+    rows.value = await api.getScans(
+      parseInt(project_id),
+      type_filter.value,
+      keyword_filter.value
+    )
+    loading.value = false
+  }
+
+  onMounted(getScans)
+
+  function del(id: number) {
+    Dialog.create({
+      title: 'Confirm',
+      message: 'Delete this scan?',
+    }).onOk(() => {
+      api.deleteScan(id).then(getScans)
+    })
+  }
+
+  function toInfo(row: Scan) {
+    router.push({
+      name: `${row.type}Scan`,
+      params: {
+        scan: JSON.stringify(row),
+      },
+    })
+  }
+
+  return {
+    loading,
+    pagination,
+    columns,
+    rows,
+    options,
+    type_filter,
+    keyword_filter,
+    getScans,
+    del,
+    toInfo,
+  }
+}
+
+export default defineComponent({
+  components: {
+    module,
+    crudBtn,
+    actionBtn,
+  },
+  setup() {
+    const router = useRouter()
+    const route = useRoute()
+    return {
+      ...useTable(router, route.query.id as string),
+      copy,
+      fmtTime,
+      str2color,
+    }
+  },
+})
+</script>
