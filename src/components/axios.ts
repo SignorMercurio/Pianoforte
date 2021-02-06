@@ -11,6 +11,7 @@ import { Dir } from 'src/models/dir'
 import { Finger } from 'src/models/finger'
 import { Vuln } from 'src/models/vuln'
 import { Endpoint } from 'src/models/endpoint'
+import { Header } from 'src/models/header'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -205,6 +206,16 @@ class MainApi extends HttpClient {
     this.instance.post<number>(
       `vulns/scan?project_id=${project_id}&target=${target}&escan_id=${escan_id}`
     )
+
+  public getTimeout = () => this.instance.get<number>('config/timeout')
+  public setTimeout = (timeout: number) =>
+    this.instance.put<number>(`config/timeout?timeout=${timeout}`)
+  public getHeaders = () => this.instance.get<Header[]>('config/headers')
+  public setHeaders = (headers: Header[]) =>
+    this.instance.put<number>('config/headers', headers)
+  public getTools = () => this.instance.get<any>('config/tools')
+  public setTools = (tools: any) =>
+    this.instance.put<number>('config/tools', tools)
 }
 
 export { NoAuthApi, MainApi }

@@ -17,3 +17,4 @@
   - feat(Finger): Add basic logic of application fingerprinting
   - feat(Endpoint): Add basic logic of endpoint discovery
   - feat(Vuln): Add basic logic of vulnerability scanning & Refactor code to use Vue3
+  - feat(Settings): Enable users to CRUD the settings
