@@ -116,11 +116,9 @@ export default defineComponent({
     const del = inject('del') as (id: number) => null
 
     function toInfo(row: Scan) {
+      sessionStorage.setItem('scan', JSON.stringify(row))
       router.push({
         name: `${props.parent}Scan`,
-        params: {
-          scan: JSON.stringify(row),
-        },
       })
     }
 

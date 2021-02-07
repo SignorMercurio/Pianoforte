@@ -1,5 +1,32 @@
 <template>
   <q-page class="q-pa-lg">
+    <module parent="Projects" icon="format_list_numbered" name="Statistics">
+      <template v-slot:card>
+        <div class="row justify-between">
+          <cnt icon="find_in_page" :num="details.Scans" type="Scans" />
+          <cnt icon="web" :num="details.Assets" type="Assets" />
+          <cnt icon="dns" :num="details.Domains" type="Domains" />
+          <cnt icon="donut_large" :num="details.Ports" type="Ports" />
+        </div>
+        <div class="row justify-between">
+          <cnt icon="folder" :num="details.Directories" type="Directories" />
+          <cnt
+            icon="fingerprint"
+            :num="details.Fingerprints"
+            type="Fingerprints"
+          />
+          <cnt icon="link" :num="details.Endpoints" type="Endpoints" />
+          <cnt
+            icon="bug_report"
+            :num="details.Vulnerabilities"
+            type="Vulnerabilities"
+          />
+        </div>
+      </template>
+    </module>
+
+    <chart :id="project_id" a-name="Type" b-name="Target" />
+
     <module parent="Projects" icon="format_list_numbered" name="Scan Results">
       <template v-slot:card>
         <q-card-section>
@@ -69,8 +96,6 @@
         </q-card-actions>
       </template>
     </module>
-    <module parent="Projects" icon="format_list_numbered" name="Statistics">
-    </module>
   </q-page>
 </template>
 
@@ -79,16 +104,18 @@ import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { MainApi } from 'components/axios'
 import { Scan } from 'src/models/scan'
-import { col } from 'src/models/project'
+import { col, Detail } from 'src/models/project'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import cnt from 'components/Cnt.vue'
+import chart from 'components/Chart.vue'
 import { Dialog } from 'quasar'
 import { copy, fmtTime, str2color } from 'components/utils'
 
 const api = MainApi.getInstance()
 
-function useTable(router: any, project_id: string) {
+function useTable(router: any, project_id: number) {
   const loading = ref(true)
   const pagination = ref({
     page: 1,
@@ -111,7 +138,7 @@ function useTable(router: any, project_id: string) {
   const getScans = async () => {
     loading.value = true
     rows.value = await api.getScans(
-      parseInt(project_id),
+      project_id,
       type_filter.value,
       keyword_filter.value
     )
@@ -130,11 +157,9 @@ function useTable(router: any, project_id: string) {
   }
 
   function toInfo(row: Scan) {
+    sessionStorage.setItem('scan', JSON.stringify(row))
     router.push({
       name: `${row.type}Scan`,
-      params: {
-        scan: JSON.stringify(row),
-      },
     })
   }
 
@@ -152,17 +177,44 @@ function useTable(router: any, project_id: string) {
   }
 }
 
+function useStat(project_id: number) {
+  const details = ref<Detail>({
+    Scans: 0,
+    Assets: 0,
+    Domains: 0,
+    Ports: 0,
+    Directories: 0,
+    Fingerprints: 0,
+    Endpoints: 0,
+    Vulnerabilities: 0,
+  })
+  const getDetails = async () => {
+    details.value = await api.getDetails(project_id)
+  }
+
+  onMounted(getDetails)
+
+  return {
+    details,
+  }
+}
+
 export default defineComponent({
   components: {
     module,
     crudBtn,
     actionBtn,
+    cnt,
+    chart,
   },
   setup() {
     const router = useRouter()
     const route = useRoute()
+    const project_id = parseInt(route.query.id as string)
     return {
-      ...useTable(router, route.query.id as string),
+      project_id,
+      ...useTable(router, project_id),
+      ...useStat(project_id),
       copy,
       fmtTime,
       str2color,

@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Notify } from 'quasar'
 
 import { Token, User, UserCreate } from 'src/models/user'
-import { ProjectCreate, Project } from 'src/models/project'
+import { ProjectCreate, Project, Detail } from 'src/models/project'
 import { Scan } from 'src/models/scan'
 import { Asset } from 'src/models/asset'
 import { Domain } from 'src/models/domain'
@@ -11,7 +11,7 @@ import { Dir } from 'src/models/dir'
 import { Finger } from 'src/models/finger'
 import { Vuln } from 'src/models/vuln'
 import { Endpoint } from 'src/models/endpoint'
-import { Header } from 'src/models/header'
+import { Header, Data, Tools } from 'src/models/misc'
 
 declare module 'axios' {
   interface AxiosResponse<T = any> extends Promise<T> {}
@@ -123,12 +123,16 @@ class MainApi extends HttpClient {
     this.instance.get<Scan[]>(
       `scans/all?project_id=${project_id}&type=${type}&keyword=${keyword}`
     )
+  public getScansData = (project_id: number) =>
+    this.instance.get<Data[][]>(`scans/data?project_id=${project_id}`)
   public deleteScan = (id: number) => this.instance.delete(`scans?id=${id}`)
 
   public getAssets = (scan_id: number, keyword: string) =>
     this.instance.get<Asset[]>(
       `assets/all?scan_id=${scan_id}&keyword=${keyword}`
     )
+  public getData = (type: string, scan_id: number) =>
+    this.instance.get<Data[][]>(`${type}/data?scan_id=${scan_id}`)
   public delete = (type: string, id: number) =>
     this.instance.delete(`${type}s?id=${id}`)
   public deleteAll = (type: string, scan_id: number) =>
@@ -213,9 +217,12 @@ class MainApi extends HttpClient {
   public getHeaders = () => this.instance.get<Header[]>('config/headers')
   public setHeaders = (headers: Header[]) =>
     this.instance.put<number>('config/headers', headers)
-  public getTools = () => this.instance.get<any>('config/tools')
-  public setTools = (tools: any) =>
+  public getTools = () => this.instance.get<Tools>('config/tools')
+  public setTools = (tools: Tools) =>
     this.instance.put<number>('config/tools', tools)
+
+  public getDetails = (id: number) =>
+    this.instance.get<Detail>(`projects/details?id=${id}`)
 }
 
 export { NoAuthApi, MainApi }

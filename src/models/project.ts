@@ -50,4 +50,15 @@ const col = [
   },
 ]
 
-export { Project, ProjectCreate, col }
+interface Detail {
+  Scans: number
+  Assets: number
+  Domains: number
+  Ports: number
+  Directories: number
+  Fingerprints: number
+  Endpoints: number
+  Vulnerabilities: number
+}
+
+export { Project, ProjectCreate, col, Detail }

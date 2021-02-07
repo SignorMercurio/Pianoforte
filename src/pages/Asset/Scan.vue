@@ -1,6 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <scan-info :scan="scan" />
+    <chart :id="scan.id" type="assets" a-name="HTTP Status" b-name="Port" />
 
     <module parent="Scan" icon="find_in_page" name="Assets">
       <template v-slot:card>
@@ -115,12 +116,12 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
+import chart from 'components/Chart.vue'
 import { Asset, col } from 'src/models/asset'
 import { Scan } from 'src/models/scan'
 import { del, del_all, status2color, copy } from 'components/utils'
@@ -160,11 +161,10 @@ export default defineComponent({
     crudBtn,
     actionBtn,
     scanInfo,
+    chart,
   },
   setup() {
-    const route = useRoute()
-    console.log(route.path)
-    const scan = JSON.parse(route.params.scan as string) as Scan
+    const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan
     return {
       scan,
       ...useTable(scan.id),

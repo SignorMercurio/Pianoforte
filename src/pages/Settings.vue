@@ -130,7 +130,7 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
-import { Header } from 'src/models/header'
+import { Header, Tools } from 'src/models/misc'
 import { MainApi } from 'components/axios'
 import { success } from 'src/components/utils'
 
@@ -175,9 +175,9 @@ function useNetwork() {
 }
 
 function useTools() {
-  const tools = ref({
-    port_http: [] as Number[],
-    port_https: [] as Number[],
+  const tools = ref<Tools>({
+    port_http: [] as number[],
+    port_https: [] as number[],
     asset_args: '',
     domain_args: '',
     port_args: '',

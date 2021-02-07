@@ -18,3 +18,4 @@
   - feat(Endpoint): Add basic logic of endpoint discovery
   - feat(Vuln): Add basic logic of vulnerability scanning & Refactor code to use Vue3
   - feat(Settings): Enable users to CRUD the settings
+  - feat(Asset, Domain, Port, Project): Add simple ECharts for scan results

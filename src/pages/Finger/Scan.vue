@@ -56,7 +56,6 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
@@ -101,8 +100,7 @@ export default defineComponent({
     scanInfo,
   },
   setup() {
-    const route = useRoute()
-    const scan = JSON.parse(route.params.scan as string) as Scan
+    const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan
     return { scan, ...useTable(scan.id), del, del_all, copy }
   },
 })
