@@ -57,33 +57,20 @@
                     </div>
                   </q-btn>
                 </q-td>
+                <!-- <q-td key="desc" :props="props" @click="copy(props.row.desc)">
+                  {{ props.row.desc }}
+                  <q-tooltip v-if="props.row.desc">{{
+                    props.row.desc
+                  }}</q-tooltip>
+                </q-td>
+                <q-td key="severity" :props="props">
+                  {{ props.row.severity }}
+                </q-td> -->
                 <q-td
-                  key="param_key"
+                  key="payload"
                   :props="props"
-                  @click="copy(props.row.param_key)"
+                  @click="copy(props.row.payload)"
                 >
-                  {{ props.row.param_key }}
-                  <q-tooltip v-if="props.row.param_key">{{
-                    props.row.param_key
-                  }}</q-tooltip>
-                </q-td>
-                <q-td key="param_pos" :props="props">
-                  {{ props.row.param_pos }}
-                  <q-tooltip v-if="props.row.param_pos">{{
-                    props.row.param_pos
-                  }}</q-tooltip>
-                </q-td>
-                <q-td
-                  key="param_val"
-                  :props="props"
-                  @click="copy(props.row.param_val)"
-                >
-                  {{ props.row.param_val }}
-                  <q-tooltip v-if="props.row.param_val">{{
-                    props.row.param_val
-                  }}</q-tooltip>
-                </q-td>
-                <q-td key="payload" :props="props">
                   {{ props.row.payload }}
                   <q-tooltip v-if="props.row.payload">{{
                     props.row.payload
@@ -91,9 +78,38 @@
                 </q-td>
                 <q-td key="op" :props="props">
                   <crud-btn
+                    type="info"
+                    @click="props.expand = !props.expand"
+                    :icon="props.expand ? 'expand_less' : 'expand_more'"
+                  />
+                  <crud-btn
                     type="del"
                     @click="del('vuln', props.row.id, getVulns)"
                   />
+                </q-td>
+              </q-tr>
+              <q-tr v-show="props.expand" :props="props">
+                <q-td colspan="100%">
+                  <q-splitter v-model="splitter" style="height: 305px">
+                    <template v-slot:before>
+                      <q-input
+                        filled
+                        readonly
+                        type="textarea"
+                        input-style="height: 300px"
+                        v-model="props.row.req"
+                      ></q-input>
+                    </template>
+                    <template v-slot:after>
+                      <q-input
+                        filled
+                        readonly
+                        type="textarea"
+                        input-style="height: 300px"
+                        v-model="props.row.resp"
+                      ></q-input>
+                    </template>
+                  </q-splitter>
                 </q-td>
               </q-tr>
             </template>
@@ -135,6 +151,7 @@ function useTable(scan_id: number) {
   const columns = ref(col)
   const rows = ref<Vuln[]>([])
   const keyword_filter = ref('')
+  const splitter = ref(50)
   // const alive_filter = ref(false)
   const getVulns = async () => {
     loading.value = true
@@ -150,6 +167,7 @@ function useTable(scan_id: number) {
     columns,
     rows,
     keyword_filter,
+    splitter,
     getVulns,
   }
 }

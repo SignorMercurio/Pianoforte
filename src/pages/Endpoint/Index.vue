@@ -33,7 +33,7 @@
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
-            <div v-show="show_advanced">
+            <div v-show="show_advanced" class="q-gutter-y-md">
               <q-input outlined label="Rad Arguments" v-model="args"></q-input>
               <q-input
                 outlined
