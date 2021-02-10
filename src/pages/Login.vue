@@ -68,7 +68,7 @@ function useLogin(store: any, router: any) {
     const { access_token } = (await api.login(loginData.value)) || {}
     if (access_token) {
       store.commit('account/login', access_token)
-      success('Login successfully')
+      // success('Login successfully')
       setTimeout(() => {
         router.push('/projects')
       }, 500)

@@ -56,11 +56,11 @@ const col = [
   },
 ]
 
-function useScan(store: any) {
+function useScan(store: any, route: any) {
   const options = ref<Project[]>(store.getters['project/getProjects'])
 
-  const target = ref('')
-  const project_id = ref(1)
+  const target = ref(route.params.target as string)
+  const project_id = ref(parseInt(route.params.project_id) || 1)
   const show_advanced = ref(false)
   const args = ref('')
   const form = ref()

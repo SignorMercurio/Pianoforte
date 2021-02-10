@@ -22,6 +22,7 @@
             <q-input
               class="col-6"
               outlined
+              clearable
               label="Target hostnames, IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
@@ -61,6 +62,7 @@
 <script lang="ts">
 import { defineComponent, provide } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import module from 'components/Module.vue'
 import actionBtn from 'src/components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
@@ -77,7 +79,6 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const store = useStore()
     const targetHint =
       'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
     const {
@@ -88,7 +89,7 @@ export default defineComponent({
       args,
       form,
       formSubmit,
-    } = useScan(store)
+    } = useScan(useStore(), useRoute())
     const table = useTable(api, 'Assets')
     const { project_id_filter, getScans } = table
 

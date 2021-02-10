@@ -26,6 +26,7 @@
             <q-input
               class="col-6"
               outlined
+              clearable
               label="Target URL"
               v-model="target"
               :hint="targetHint"
@@ -69,6 +70,7 @@
 <script lang="ts">
 import { defineComponent, provide } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanRes from 'components/ScanRes.vue'
@@ -85,7 +87,6 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const store = useStore()
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
 
     const {
@@ -96,7 +97,7 @@ export default defineComponent({
       args,
       form,
       formSubmit,
-    } = useScan(store)
+    } = useScan(useStore(), useRoute())
 
     const table = useTable(api, 'Fingerprints')
     const { project_id_filter, getScans } = table

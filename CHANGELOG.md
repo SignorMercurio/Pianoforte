@@ -20,3 +20,4 @@
   - feat(Settings): Enable users to CRUD the settings
   - feat(Asset, Domain, Port, Project): Add simple ECharts for scan results
   - feat(Vuln): Add Request-Response view for detailed inspection
+  - feat(Asset, Domain): Add simple data-sharing logic

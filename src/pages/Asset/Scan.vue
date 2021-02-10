@@ -91,6 +91,10 @@
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
+                  <send-btn
+                    :project_id="scan.project.id"
+                    :ops="getOps(props.row)"
+                  />
                   <crud-btn
                     type="del"
                     @click="del('asset', props.row.id, getAssets)"
@@ -101,6 +105,12 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <action-btn
+            color="info"
+            icon="forward"
+            tip="Send target to Port Scanning"
+            @click="send2port"
+          />
           <action-btn icon="update" tip="Refresh" @click="getAssets" />
           <action-btn
             color="negative"
@@ -116,9 +126,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
+import sendBtn from 'components/Buttons/SendBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
@@ -155,19 +167,66 @@ function useTable(scan_id: number) {
   }
 }
 
+function useSend(scan: Scan, router: any) {
+  const { project, target } = scan
+
+  function send2port() {
+    router.push({
+      name: 'Ports',
+      params: {
+        project_id: project.id,
+        target,
+      },
+    })
+  }
+
+  function getOps(row: Asset) {
+    return [
+      {
+        from: 'IP',
+        to: 'Ports',
+        target: row.ip,
+      },
+      {
+        from: 'URL',
+        to: 'Directories',
+        target: row.url,
+      },
+      {
+        from: 'URL',
+        to: 'Fingerprints',
+        target: row.url,
+      },
+      {
+        from: 'URL',
+        to: 'Endpoints',
+        target: row.url,
+      },
+    ]
+  }
+
+  return {
+    send2port,
+    getOps,
+  }
+}
+
 export default defineComponent({
   components: {
     module,
     crudBtn,
+    sendBtn,
     actionBtn,
     scanInfo,
     chart,
   },
   setup() {
+    const router = useRouter()
     const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan
     return {
       scan,
       ...useTable(scan.id),
+      ...useSend(scan, router),
       del,
       del_all,
       status2color,

@@ -19,6 +19,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'assets',
+        name: 'Assets',
         component: () => import('pages/Asset/Index.vue'),
       },
       {
@@ -28,6 +29,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'domains',
+        name: 'Domains',
         component: () => import('pages/Domain/Index.vue'),
       },
       {
@@ -37,6 +39,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'ports',
+        name: 'Ports',
         component: () => import('pages/Port/Index.vue'),
       },
       {
@@ -46,6 +49,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'dirs',
+        name: 'Directories',
         component: () => import('pages/Dir/Index.vue'),
       },
       {
@@ -55,6 +59,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'fingers',
+        name: 'Fingerprints',
         component: () => import('pages/Finger/Index.vue'),
       },
       {
@@ -64,6 +69,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'endpoints',
+        name: 'Endpoints',
         component: () => import('pages/Endpoint/Index.vue'),
       },
       {

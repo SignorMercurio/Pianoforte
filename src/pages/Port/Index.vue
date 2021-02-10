@@ -22,6 +22,7 @@
             <q-input
               class="col-6"
               outlined
+              clearable
               label="Target hostnames, IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
@@ -75,6 +76,7 @@
 <script lang="ts">
 import { defineComponent, provide, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
@@ -91,7 +93,6 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const store = useStore()
     const targetHint =
       'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
     const portsHint = 'e.g. 22; 1-65535; U:53,111,137,T:21-25,80,139,8080,S:9'
@@ -106,7 +107,8 @@ export default defineComponent({
       args,
       form,
       formSubmit,
-    } = useScan(store)
+    } = useScan(useStore(), useRoute())
+
     const table = useTable(api, 'Ports')
     const { project_id_filter, getScans } = table
 

@@ -100,6 +100,10 @@
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
+                  <send-btn
+                    :project_id="scan.project.id"
+                    :ops="getOps(props.row)"
+                  />
                   <crud-btn
                     type="del"
                     @click="del('domain', props.row.id, getDomains)"
@@ -128,6 +132,7 @@ import { defineComponent, onMounted, ref } from 'vue'
 import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
+import sendBtn from 'components/Buttons/SendBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
@@ -170,10 +175,47 @@ function useTable(scan_id: number) {
   }
 }
 
+function useSend() {
+  function getOps(row: Domain) {
+    return [
+      {
+        from: 'Subdomain',
+        to: 'Assets',
+        target: row.subdomain,
+      },
+      {
+        from: 'Subdomain',
+        to: 'Ports',
+        target: row.subdomain,
+      },
+      {
+        from: 'URL',
+        to: 'Directories',
+        target: row.url,
+      },
+      {
+        from: 'URL',
+        to: 'Fingerprints',
+        target: row.url,
+      },
+      {
+        from: 'URL',
+        to: 'Endpoints',
+        target: row.url,
+      },
+    ]
+  }
+
+  return {
+    getOps,
+  }
+}
+
 export default defineComponent({
   components: {
     module,
     crudBtn,
+    sendBtn,
     actionBtn,
     scanInfo,
     chart,
@@ -183,6 +225,7 @@ export default defineComponent({
     return {
       scan,
       ...useTable(scan.id),
+      ...useSend(),
       del,
       del_all,
       status2color,

@@ -11,7 +11,7 @@
         <q-toolbar-title> Pianoforte </q-toolbar-title>
         <q-space></q-space>
         <q-btn :label="user.username" flat icon="account_circle">
-          <q-menu fit transition-show="flip-right" transition-hide="flip-left">
+          <q-menu fit transition-show="jump-down" transition-hide="jump-up">
             <q-list>
               <q-item clickable v-close-popup @click="logout">
                 <q-item-section avatar>
@@ -72,7 +72,7 @@ function useAccount(store: any, router: any) {
 
   function logout() {
     store.commit('account/logout')
-    success('Logout successfully')
+    // success('Logout successfully')
     setTimeout(() => {
       router.push('/login')
     }, 500)
