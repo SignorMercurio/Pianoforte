@@ -114,6 +114,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="domains" />
           <action-btn icon="update" tip="Refresh" @click="getDomains" />
           <action-btn
             color="negative"
@@ -134,6 +135,7 @@ import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import sendBtn from 'components/Buttons/SendBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
 import { Domain, col } from 'src/models/domain'
@@ -217,6 +219,7 @@ export default defineComponent({
     crudBtn,
     sendBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
     chart,
   },

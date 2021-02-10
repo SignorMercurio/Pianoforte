@@ -56,6 +56,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="endpoints" />
           <action-btn
             color="info"
             icon="forward"
@@ -81,6 +82,7 @@ import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import { Endpoint, col } from 'src/models/endpoint'
 import { Scan } from 'src/models/scan'
@@ -133,6 +135,7 @@ export default defineComponent({
     module,
     crudBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
   },
   setup() {

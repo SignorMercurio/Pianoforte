@@ -78,6 +78,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="dirs" />
           <action-btn icon="update" tip="Refresh" @click="getDirs" />
           <action-btn
             color="negative"
@@ -97,6 +98,7 @@ import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import { Dir, col } from 'src/models/dir'
 import { Scan } from 'src/models/scan'
@@ -142,6 +144,7 @@ export default defineComponent({
     module,
     crudBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
   },
   setup() {

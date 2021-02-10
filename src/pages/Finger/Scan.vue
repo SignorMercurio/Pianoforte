@@ -41,6 +41,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="fingers" />
           <action-btn icon="update" tip="Refresh" @click="getFingers" />
           <action-btn
             color="negative"
@@ -60,6 +61,7 @@ import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import { Finger, col } from 'src/models/finger'
 import { Scan } from 'src/models/scan'
@@ -97,6 +99,7 @@ export default defineComponent({
     module,
     crudBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
   },
   setup() {

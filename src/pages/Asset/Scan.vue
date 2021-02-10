@@ -105,10 +105,11 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="assets" />
           <action-btn
             color="info"
             icon="forward"
-            tip="Send target to Port Scanning"
+            tip="Send to Port Scanning"
             @click="send2port"
           />
           <action-btn icon="update" tip="Refresh" @click="getAssets" />
@@ -132,6 +133,7 @@ import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import sendBtn from 'components/Buttons/SendBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
 import { Asset, col } from 'src/models/asset'
@@ -217,6 +219,7 @@ export default defineComponent({
     crudBtn,
     sendBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
     chart,
   },

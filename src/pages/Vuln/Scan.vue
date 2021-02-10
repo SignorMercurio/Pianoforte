@@ -116,6 +116,7 @@
           </q-table>
         </q-card-section>
         <q-card-actions align="right">
+          <export-btn :id="scan.id" type="vulns" />
           <action-btn icon="update" tip="Refresh" @click="getVulns" />
           <action-btn
             color="negative"
@@ -135,6 +136,7 @@ import { MainApi } from 'components/axios'
 import module from 'components/Module.vue'
 import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
+import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import { Vuln, col } from 'src/models/vuln'
 import { Scan } from 'src/models/scan'
@@ -177,6 +179,7 @@ export default defineComponent({
     module,
     crudBtn,
     actionBtn,
+    exportBtn,
     scanInfo,
   },
   setup() {

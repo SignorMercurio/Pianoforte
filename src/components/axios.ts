@@ -131,8 +131,6 @@ class MainApi extends HttpClient {
     this.instance.get<Asset[]>(
       `assets/all?scan_id=${scan_id}&keyword=${keyword}`
     )
-  public getData = (type: string, scan_id: number) =>
-    this.instance.get<Data[][]>(`${type}/data?scan_id=${scan_id}`)
   public delete = (type: string, id: number) =>
     this.instance.delete(`${type}s?id=${id}`)
   public deleteAll = (type: string, scan_id: number) =>
@@ -141,6 +139,16 @@ class MainApi extends HttpClient {
     this.instance.post<number>(
       `assets/scan?project_id=${project_id}&target=${target}`,
       args
+    )
+
+  public getData = (type: string, scan_id: number) =>
+    this.instance.get<Data[][]>(`${type}/data?scan_id=${scan_id}`)
+  public getExport = (type: string, scan_id: number, export_type: string) =>
+    this.instance.get<Blob>(
+      `${type}/export?scan_id=${scan_id}&type=${export_type}`,
+      {
+        responseType: 'blob',
+      }
     )
 
   public getDomains = (scan_id: number, keyword: string, alive: boolean) =>

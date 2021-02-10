@@ -1,5 +1,6 @@
 <template>
   <q-btn flat color="info" icon="forward">
+    <q-tooltip>Send to</q-tooltip>
     <q-menu
       transition-show="jump-down"
       transition-hide="jump-up"

@@ -26,23 +26,23 @@
     </q-header>
 
     <q-drawer v-model="drawer" show-if-above :width="200" side="left">
-      <q-scroll-area class="fit">
-        <q-list padding>
-          <template v-for="(menuItem, index) in menuList" :key="index">
-            <q-item
-              clickable
-              :active="route.path.startsWith(menuItem.route)"
-              v-ripple
-              @click="router.push(menuItem.route)"
-            >
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>{{ menuItem.label }}</q-item-section>
-            </q-item>
-          </template>
-        </q-list>
-      </q-scroll-area>
+      <!-- <q-scroll-area class="fit"> -->
+      <q-list padding>
+        <template v-for="(menuItem, index) in menuList" :key="index">
+          <q-item
+            clickable
+            :active="route.path.startsWith(menuItem.route)"
+            v-ripple
+            @click="router.push(menuItem.route)"
+          >
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>{{ menuItem.label }}</q-item-section>
+          </q-item>
+        </template>
+      </q-list>
+      <!-- </q-scroll-area> -->
     </q-drawer>
 
     <q-page-container>
