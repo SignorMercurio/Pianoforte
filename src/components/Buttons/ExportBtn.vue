@@ -41,10 +41,9 @@ export default defineComponent({
   },
   setup(props) {
     const ops = ['json', 'csv', 'xlsx']
-    const { type, id } = props
     async function export_all(op: string) {
-      const blob = await api.getExport(type, id, op)
-      const status = exportFile(`${type}_${id}.${op}`, blob)
+      const blob = await api.getExport(props.type, props.id, op)
+      const status = exportFile(`${props.type}_${props.id}.${op}`, blob)
       if (!status) {
         fail('Download failed...')
       }

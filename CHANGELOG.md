@@ -22,3 +22,8 @@
   - feat(Vuln): Add Request-Response view for detailed inspection
   - feat(Asset, Domain): Add simple data-sharing logic
   - feat(\*): Data exporting now available
+
+## v0.2.0
+
+- Fix
+  - fix(ExportBtn): Eliminate build errors when destructuring props
