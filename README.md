@@ -1,26 +1,61 @@
-# Pianoforte (pianoforte)
+# Pianoforte
 
 Pianoforte Is AN Offensive Framework Of Red TEam
 
-## Install the dependencies
+## Technologies
+
+- Frontend
+  - [Vue.js](https://cn.vuejs.org/) ([Composition API](https://v3.cn.vuejs.org/guide/composition-api-introduction.html))
+  - [Typescript](https://www.typescriptlang.org/)
+  - [Quasar Framework](https://quasar.dev/)
+- Backend
+  - [FastAPI](https://fastapi.tiangolo.com/) ([Python](https://www.python.org/))
+  - [SQLite](https://www.sqlite.org/) / [PostgreSQL](https://www.postgresql.org/)
+  - [Tortoise ORM](https://tortoise.github.io/)
+  - [Uvicorn](https://www.uvicorn.org/)
+  - Open Source Security Tools（[Nmap](https://github.com/nmap/nmap), [OneForAll](https://github.com/shmilylty/OneForAll/), etc.）
+  - [Docker](https://www.docker.com/)
+
+## Features
+
+- Project Management
+- A Pipeline of Various Scanning
+  - Asset Discovery
+  - Subdomain Enumeration
+  - Port Scanning
+  - Directory Bruteforcing
+  - Application Fingerprinting
+  - Endpoints Gathering
+  - Vulnerability Scanning
+- Data Visualization
+- Data Exporting
+
+## Installation
+
+### Backend
+
+The backend is encapsulated in docker, so simply run:
+
+```bash
+docker run -p8000:8000 signormercurio/pianoforte
+```
+
+And the backend will be ready at http://localhost:8000.
+
+> The backend is not designed to be publicly accessible.
+
+### Frontend
+
+Download a [Release] which can be served over a simple HTTP server, or follow these instructions to start the app in development mode.
+
+To install the dependencies:
+
 ```bash
 yarn
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+To start the app in dev mode:
 
-### Lint the files
 ```bash
-yarn run lint
+npm run webdev
 ```
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
