@@ -23,7 +23,7 @@
               class="col-6"
               outlined
               clearable
-              label="Target hostnames, IP addresses, networks, etc."
+              label="IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
               lazy-rules
@@ -37,8 +37,8 @@
             <div v-show="show_advanced">
               <q-input
                 outlined
-                label="Command Line Arguments"
-                v-model="args"
+                label="Arguments for httpx"
+                v-model="httpx_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from 'vue'
+import { defineComponent, provide, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import module from 'components/Module.vue'
@@ -79,14 +79,14 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const targetHint =
-      'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
+    const targetHint = 'e.g. 192.168.0.1/24'
+    const httpx_args = ref('')
+
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -97,7 +97,7 @@ export default defineComponent({
       const code = await api.scanAsset(
         project_id.value,
         target.value,
-        args.value
+        httpx_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -112,11 +112,11 @@ export default defineComponent({
 
     return {
       targetHint,
+      httpx_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,

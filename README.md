@@ -37,7 +37,7 @@ Pianoforte Is AN Offensive Framework Of Red TEam
 The backend is encapsulated in docker, so simply run:
 
 ```bash
-docker run -p8000:8000 signormercurio/pianoforte
+docker run -it -p8000:8000 signormercurio/pianoforte
 ```
 
 And the backend will be ready at http://localhost:8000.

@@ -26,27 +26,33 @@
     </q-header>
 
     <q-drawer v-model="drawer" show-if-above :width="200" side="left">
-      <!-- <q-scroll-area class="fit"> -->
-      <q-list padding>
-        <template v-for="(menuItem, index) in menuList" :key="index">
-          <q-item
-            clickable
-            :active="route.path.startsWith(menuItem.route)"
-            v-ripple
-            @click="router.push(menuItem.route)"
-          >
-            <q-item-section avatar>
-              <q-icon :name="menuItem.icon" />
-            </q-item-section>
-            <q-item-section>{{ menuItem.label }}</q-item-section>
-          </q-item>
-        </template>
-      </q-list>
-      <!-- </q-scroll-area> -->
+      <q-scroll-area
+        class="fit"
+        :thumb-style="thumbStyle"
+        :bar-style="barStyle"
+      >
+        <q-list padding>
+          <template v-for="(menuItem, index) in menuList" :key="index">
+            <q-item
+              clickable
+              :active="route.path.startsWith(menuItem.route)"
+              v-ripple
+              @click="router.push(menuItem.route)"
+            >
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>{{ menuItem.label }}</q-item-section>
+            </q-item>
+          </template>
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
+      <!-- <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle"> -->
       <router-view />
+      <!-- </q-scroll-area> -->
     </q-page-container>
   </q-layout>
 </template>
@@ -56,7 +62,6 @@ import { defineComponent, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { MainApi } from 'components/axios'
-import { success } from 'components/utils'
 import { User } from 'src/models/user'
 
 const api = MainApi.getInstance()
@@ -72,7 +77,6 @@ function useAccount(store: any, router: any) {
 
   function logout() {
     store.commit('account/logout')
-    // success('Logout successfully')
     setTimeout(() => {
       router.push('/login')
     }, 500)
@@ -83,6 +87,21 @@ function useAccount(store: any, router: any) {
 
 function useDrawer() {
   const drawer = ref(true)
+  const thumbStyle = {
+    right: '4px',
+    borderRadius: '5px',
+    backgroundColor: '#027be3',
+    width: '5px',
+    opacity: 0.75,
+  }
+  const barStyle = {
+    right: '2px',
+    borderRadius: '9px',
+    backgroundColor: '#027be3',
+    width: '9px',
+    opacity: 0.2,
+  }
+
   const menuList = ref([
     {
       icon: 'format_list_numbered',
@@ -131,7 +150,7 @@ function useDrawer() {
     },
   ])
 
-  return { menuList, drawer }
+  return { menuList, drawer, thumbStyle, barStyle }
 }
 
 export default defineComponent({

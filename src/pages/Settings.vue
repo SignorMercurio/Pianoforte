@@ -9,28 +9,33 @@
             type="number"
             v-model.number="timeout"
           />
-          <q-field dense>
-            <template v-slot:control>
-              <div class="text-h6">Request Headers</div>
-            </template>
-          </q-field>
-
-          <div
-            class="row q-gutter-x-md"
-            v-for="(header, index) in headers"
-            :key="index"
-          >
-            <q-input outlined label="Key" class="col-4" v-model="header.key" />
-            <q-input
-              outlined
-              label="Value"
-              class="col-4"
-              v-model="header.value"
-            />
-            <q-space />
-            <q-btn flat color="green" icon="add" @click="addHdr(index)" />
-            <q-btn flat color="red" icon="remove" @click="rmHdr(index)" />
-          </div>
+          <q-list bordered class="rounded-borders">
+            <q-expansion-item label="Request Headers" icon="http">
+              <q-card>
+                <q-card-section
+                  class="row q-gutter-x-md"
+                  v-for="(header, index) in headers"
+                  :key="index"
+                >
+                  <q-input
+                    outlined
+                    label="Key"
+                    class="col-4"
+                    v-model="header.key"
+                  />
+                  <q-input
+                    outlined
+                    label="Value"
+                    class="col-4"
+                    v-model="header.value"
+                  />
+                  <q-space />
+                  <q-btn flat color="green" icon="add" @click="addHdr(index)" />
+                  <q-btn flat color="red" icon="remove" @click="rmHdr(index)" />
+                </q-card-section>
+              </q-card>
+            </q-expansion-item>
+          </q-list>
         </q-card-section>
         <q-card-actions align="right">
           <action-btn icon="save" tip="Save" @click="saveNetwork" />
@@ -40,7 +45,7 @@
     <module parent="Settings" icon="settings" name="Tools">
       <template v-slot:card>
         <q-card-section class="q-gutter-y-md">
-          <q-field outlined stack-label label="HTTP ports">
+          <q-field outlined stack-label label="HTTP(s) ports">
             <template v-slot:control>
               <q-chip
                 size="sm"
@@ -48,10 +53,10 @@
                 :key="id"
                 removable
                 @remove="rmPort(id)"
-                color="primary"
+                color="green"
                 :label="port"
               />
-              <q-btn size="xs" rounded icon="add" color="primary">
+              <q-btn size="xs" rounded icon="add" color="green">
                 <q-popup-edit
                   title="Port"
                   v-model.number="portTmp"
@@ -73,50 +78,136 @@
               </q-btn>
             </template>
           </q-field>
-          <q-field outlined stack-label label="HTTPS ports">
-            <template v-slot:control>
-              <q-chip
-                size="sm"
-                v-for="(port, id) in tools.port_https"
-                :key="id"
-                removable
-                @remove="rmPorts(id)"
-                color="green"
-                :label="port"
-              />
-              <q-btn size="xs" rounded icon="add" color="green">
-                <q-popup-edit
-                  title="Port"
-                  v-model.number="portTmp"
-                  :validate="portValidation"
-                  @hide="portValidation"
-                  @save="addPorts"
-                  v-slot="scope"
-                >
-                  <q-input
-                    type="number"
-                    v-model.number="scope.value"
-                    hint="1-65535"
-                    :error="errPort"
-                    :error-message="errMsgPort"
-                    dense
-                    @keyup.enter="scope.set"
-                  ></q-input>
-                </q-popup-edit>
-              </q-btn>
-            </template>
-          </q-field>
-          <q-field dense>
+          <!-- <q-field dense>
             <template v-slot:control>
               <div class="text-h6">Default Command Line Arguments</div>
             </template>
-          </q-field>
-          <q-input outlined label="Assets" v-model="tools.asset_args" />
-          <q-input outlined label="Domains" v-model="tools.domain_args" />
-          <q-input outlined label="Ports" v-model="tools.port_args" />
-          <q-input outlined label="Directories" v-model="tools.dir_args" />
-          <q-input outlined label="Fingerprints" v-model="tools.finger_args" />
-          <q-input outlined label="Endpoints" v-model="tools.hak_args" />
+          </q-field> -->
+          <q-list bordered class="rounded-borders">
+            <q-expansion-item
+              label="Default Command Line Arguments"
+              icon="tune"
+            >
+              <q-expansion-item
+                expand-separator
+                label="Assets"
+                icon="web"
+                caption="httpx"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input
+                      outlined
+                      label="httpx"
+                      v-model="tools.httpx_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+              <q-expansion-item
+                expand-separator
+                label="Domains"
+                icon="dns"
+                caption="OneForAll, subfinder"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input
+                      outlined
+                      label="OneForAll"
+                      v-model="tools.oneforall_args"
+                    />
+                    <q-input
+                      class="q-mt-md"
+                      outlined
+                      label="subfinder"
+                      v-model="tools.subfinder_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+              <q-expansion-item
+                expand-separator
+                label="Ports"
+                icon="donut_large"
+                caption="nmap, masscan, naabu"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input outlined label="Nmap" v-model="tools.nmap_args" />
+                    <q-input
+                      class="q-mt-md"
+                      outlined
+                      label="masscan"
+                      v-model="tools.masscan_args"
+                    />
+                    <q-input
+                      class="q-mt-md"
+                      outlined
+                      label="naabu"
+                      v-model="tools.naabu_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+              <q-expansion-item
+                expand-separator
+                label="Directories"
+                icon="folder"
+                caption="dirsearch"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input
+                      outlined
+                      label="dirsearch"
+                      v-model="tools.dirsearch_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+              <q-expansion-item
+                expand-separator
+                label="Fingerprints"
+                icon="fingerprint"
+                caption="WhatWeb"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input
+                      outlined
+                      label="WhatWeb"
+                      v-model="tools.whatweb_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+              <q-expansion-item
+                expand-separator
+                label="Endpoints"
+                icon="link"
+                caption="rad, hakrawler"
+                :header-inset-level="0.5"
+                :content-inset-level="0.5"
+              >
+                <q-card
+                  ><q-card-section>
+                    <q-input outlined label="rad" v-model="tools.rad_args" />
+                    <q-input
+                      class="q-mt-md"
+                      outlined
+                      label="hakrawler"
+                      v-model="tools.hakrawler_args"
+                    /> </q-card-section
+                ></q-card>
+              </q-expansion-item>
+            </q-expansion-item>
+          </q-list>
         </q-card-section>
         <q-card-actions align="right">
           <action-btn icon="save" tip="Save" @click="saveTools" />
@@ -177,13 +268,16 @@ function useNetwork() {
 function useTools() {
   const tools = ref<Tools>({
     port_http: [] as number[],
-    port_https: [] as number[],
-    asset_args: '',
-    domain_args: '',
-    port_args: '',
-    dir_args: '',
-    finger_args: '',
-    hak_args: '',
+    httpx_args: '',
+    oneforall_args: '',
+    subfinder_args: '',
+    nmap_args: '',
+    masscan_args: '',
+    naabu_args: '',
+    dirsearch_args: '',
+    whatweb_args: '',
+    rad_args: '',
+    hakrawler_args: '',
   })
   const portTmp = ref(80)
   const errPort = ref(false)
@@ -197,9 +291,6 @@ function useTools() {
 
   function addPort(val: number) {
     tools.value.port_http.push(val)
-  }
-  function addPorts(val: number) {
-    tools.value.port_https.push(val)
   }
 
   function portValidation(val: number) {
@@ -216,9 +307,6 @@ function useTools() {
   function rmPort(index: number) {
     tools.value.port_http.splice(index, 1)
   }
-  function rmPorts(index: number) {
-    tools.value.port_https.splice(index, 1)
-  }
 
   async function saveTools() {
     const code = await api.setTools(tools.value)
@@ -233,10 +321,8 @@ function useTools() {
     errPort,
     errMsgPort,
     addPort,
-    addPorts,
     portValidation,
     rmPort,
-    rmPorts,
     saveTools,
   }
 }

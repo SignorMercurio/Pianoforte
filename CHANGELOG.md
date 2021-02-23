@@ -26,4 +26,8 @@
 ## v0.2.0
 
 - Fix
+
   - fix(ExportBtn): Eliminate build errors when destructuring props
+
+- New
+  - refactor(Settings): Adjust UI & Rename arguments

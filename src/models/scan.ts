@@ -62,14 +62,13 @@ function useScan(store: any, route: any) {
   const target = ref(route.params.target as string)
   const project_id = ref(parseInt(route.params.project_id) || 1)
   const show_advanced = ref(false)
-  const args = ref('')
   const form = ref()
 
   function formSubmit() {
     form.value.submit()
   }
 
-  return { options, target, project_id, show_advanced, args, form, formSubmit }
+  return { options, target, project_id, show_advanced, form, formSubmit }
 }
 
 function useTable(api: MainApi, type: string) {

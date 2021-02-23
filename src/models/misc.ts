@@ -5,13 +5,16 @@ export interface Header {
 
 export interface Tools {
   port_http: number[]
-  port_https: number[]
-  asset_args: string
-  domain_args: string
-  port_args: string
-  dir_args: string
-  finger_args: string
-  hak_args: string
+  httpx_args: string
+  oneforall_args: string
+  subfinder_args: string
+  nmap_args: string
+  masscan_args: string
+  naabu_args: string
+  dirsearch_args: string
+  whatweb_args: string
+  rad_args: string
+  hakrawler_args: string
 }
 
 export interface Data {

@@ -41,8 +41,8 @@
             <div v-show="show_advanced">
               <q-input
                 outlined
-                label="Command Line Arguments"
-                v-model="args"
+                label="Arguments for WhatWeb"
+                v-model="whatweb_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from 'vue'
+import { defineComponent, provide, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import module from 'components/Module.vue'
@@ -88,13 +88,13 @@ export default defineComponent({
   },
   setup() {
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
+    const whatweb_args = ref('')
 
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -106,7 +106,7 @@ export default defineComponent({
       const code = await api.scanFinger(
         project_id.value,
         target.value,
-        args.value
+        whatweb_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -121,11 +121,11 @@ export default defineComponent({
 
     return {
       targetHint,
+      whatweb_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,

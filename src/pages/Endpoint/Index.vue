@@ -35,11 +35,15 @@
         <q-card-section>
           <q-slide-transition appear>
             <div v-show="show_advanced" class="q-gutter-y-md">
-              <q-input outlined label="Rad Arguments" v-model="args"></q-input>
               <q-input
                 outlined
-                label="Hakrawler Arguments"
-                v-model="args_hak"
+                label="Arguments for rad"
+                v-model="rad_args"
+              ></q-input>
+              <q-input
+                outlined
+                label="Arguments for hakrawler"
+                v-model="hakrawler_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -85,14 +89,14 @@ export default defineComponent({
   },
   setup() {
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
-    const args_hak = ref('')
+    const rad_args = ref('')
+    const hakrawler_args = ref('')
 
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -104,8 +108,8 @@ export default defineComponent({
       const code = await api.scanEndpoint(
         project_id.value,
         target.value,
-        args.value,
-        args_hak.value
+        rad_args.value,
+        hakrawler_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -120,12 +124,12 @@ export default defineComponent({
 
     return {
       targetHint,
-      args_hak,
+      rad_args,
+      hakrawler_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,

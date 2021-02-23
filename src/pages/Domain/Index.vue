@@ -34,11 +34,16 @@
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
-            <div v-show="show_advanced">
+            <div v-show="show_advanced" class="q-gutter-y-md">
               <q-input
                 outlined
-                label="Command Line Arguments"
-                v-model="args"
+                label="Arguments for OneForAll"
+                v-model="oneforall_args"
+              ></q-input>
+              <q-input
+                outlined
+                label="Arguments for subfinder"
+                v-model="subfinder_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -59,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide } from 'vue'
+import { defineComponent, provide, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import module from 'components/Module.vue'
@@ -79,13 +84,14 @@ export default defineComponent({
   },
   setup() {
     const targetHint = 'e.g. example.com; hackerone.com'
+    const oneforall_args = ref('')
+    const subfinder_args = ref('')
 
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -97,7 +103,8 @@ export default defineComponent({
       const code = await api.scanDomain(
         project_id.value,
         target.value,
-        args.value
+        oneforall_args.value,
+        subfinder_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -112,11 +119,12 @@ export default defineComponent({
 
     return {
       targetHint,
+      oneforall_args,
+      subfinder_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,

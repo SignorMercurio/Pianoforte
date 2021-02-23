@@ -53,7 +53,6 @@ import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { NoAuthApi } from 'components/axios'
-import { success } from 'components/utils'
 import { UserCreate } from 'src/models/user'
 
 const api = NoAuthApi.getInstance()

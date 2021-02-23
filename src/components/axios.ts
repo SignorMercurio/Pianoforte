@@ -155,10 +155,15 @@ class MainApi extends HttpClient {
     this.instance.get<Domain[]>(
       `domains/all?scan_id=${scan_id}&keyword=${keyword}&alive=${String(alive)}`
     )
-  public scanDomain = (project_id: number, target: string, args: string) =>
+  public scanDomain = (
+    project_id: number,
+    target: string,
+    oneforall_args: string,
+    subfinder_args: string
+  ) =>
     this.instance.post<number>(
       `domains/scan?project_id=${project_id}&target=${target}`,
-      args
+      { oneforall_args, subfinder_args }
     )
 
   public getPorts = (scan_id: number, keyword: string) =>
@@ -166,12 +171,15 @@ class MainApi extends HttpClient {
   public scanPort = (
     project_id: number,
     target: string,
-    ports: string,
-    args: string
+    ports_tcp: string,
+    ports_udp: string,
+    nmap_args: string,
+    masscan_args: string,
+    naabu_args: string
   ) =>
     this.instance.post<number>(
       `ports/scan?project_id=${project_id}&target=${target}`,
-      { ports, args }
+      { ports_tcp, ports_udp, nmap_args, masscan_args, naabu_args }
     )
 
   public getDirs = (scan_id: number, keyword: string, alive: boolean) =>

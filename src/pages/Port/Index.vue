@@ -23,7 +23,7 @@
               class="col-6"
               outlined
               clearable
-              label="Target hostnames, IP addresses, networks, etc."
+              label="IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
               lazy-rules
@@ -33,21 +33,30 @@
           </q-form>
           <q-input
             outlined
-            label="Port ranges"
-            v-model="ports"
+            label="TCP Port ranges"
+            v-model="ports_tcp"
             :hint="portsHint"
-            lazy-rules
-            :rules="[(val) => !!val || 'Required *']"
           >
           </q-input>
+          <q-input outlined label="UDP Port ranges" v-model="ports_udp" />
         </q-card-section>
         <q-card-section>
           <q-slide-transition appear>
-            <div v-show="show_advanced">
+            <div v-show="show_advanced" class="q-gutter-y-md">
               <q-input
                 outlined
-                label="Command Line Arguments"
-                v-model="args"
+                label="Arguments for nmap"
+                v-model="nmap_args"
+              ></q-input>
+              <q-input
+                outlined
+                label="Arguments for masscan"
+                v-model="masscan_args"
+              ></q-input>
+              <q-input
+                outlined
+                label="Arguments for naabu"
+                v-model="naabu_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -93,18 +102,21 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const targetHint =
-      'e.g. scanme.nmap.org; microsoft.com/24; 192.168.0.1; 10.0.0-255.1-254'
-    const portsHint = 'e.g. 22; 1-65535; U:53,111,137,T:21-25,80,139,8080,S:9'
-    const ports = ref(
-      '21,22,80,81,88,443,445,3000,3306,3389,4443,5000,7001,8000,8080,8081,8088,8443,8888,9000,9200,U:137,161,1900,5353'
+    const targetHint = 'e.g. 192.168.0.1/24'
+    const portsHint = 'e.g. 22; 1-65535; 21-25,80,139,8080'
+    const ports_tcp = ref(
+      '21,22,80,81,88,135,443,445,3000,3306,3389,4443,5000,7001,8000,8080,8081,8088,8443,8888,9000,9200'
     )
+    const ports_udp = ref('137,161,1900,5353')
+    const nmap_args = ref('')
+    const masscan_args = ref('')
+    const naabu_args = ref('')
+
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -116,8 +128,11 @@ export default defineComponent({
       const code = await api.scanPort(
         project_id.value,
         target.value,
-        ports.value,
-        args.value
+        ports_tcp.value,
+        ports_udp.value,
+        nmap_args.value,
+        masscan_args.value,
+        naabu_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -133,12 +148,15 @@ export default defineComponent({
     return {
       targetHint,
       portsHint,
-      ports,
+      ports_tcp,
+      ports_udp,
+      nmap_args,
+      masscan_args,
+      naabu_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,

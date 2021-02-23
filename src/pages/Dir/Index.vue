@@ -46,8 +46,8 @@
             <div v-show="show_advanced">
               <q-input
                 outlined
-                label="Command Line Arguments"
-                v-model="args"
+                label="Arguments for dirsearch"
+                v-model="dirsearch_args"
               ></q-input>
             </div>
           </q-slide-transition>
@@ -95,13 +95,13 @@ export default defineComponent({
     const targetHint = 'e.g. https://example.com; https://hackerone.com'
     const extHint = 'e.g. php,html,js; php,asp,aspx,jsp,bak,zip,tgz'
     const ext = ref('php')
+    const dirsearch_args = ref('')
 
     const {
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
     } = useScan(useStore(), useRoute())
@@ -114,7 +114,7 @@ export default defineComponent({
         project_id.value,
         target.value,
         ext.value,
-        args.value
+        dirsearch_args.value
       )
       if (code) {
         success(`Scanning task #${code} submitted`)
@@ -131,11 +131,11 @@ export default defineComponent({
       targetHint,
       extHint,
       ext,
+      dirsearch_args,
       options,
       target,
       project_id,
       show_advanced,
-      args,
       form,
       formSubmit,
       scan,
