@@ -42,6 +42,11 @@
               ></q-input>
               <q-input
                 outlined
+                label="Arguments for amass"
+                v-model="amass_args"
+              ></q-input>
+              <q-input
+                outlined
                 label="Arguments for subfinder"
                 v-model="subfinder_args"
               ></q-input>
@@ -85,6 +90,7 @@ export default defineComponent({
   setup() {
     const targetHint = 'e.g. example.com; hackerone.com'
     const oneforall_args = ref('')
+    const amass_args = ref('')
     const subfinder_args = ref('')
 
     const {
@@ -104,6 +110,7 @@ export default defineComponent({
         project_id.value,
         target.value,
         oneforall_args.value,
+        amass_args.value,
         subfinder_args.value
       )
       if (code) {
@@ -120,6 +127,7 @@ export default defineComponent({
     return {
       targetHint,
       oneforall_args,
+      amass_args,
       subfinder_args,
       options,
       target,

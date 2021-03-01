@@ -159,11 +159,12 @@ class MainApi extends HttpClient {
     project_id: number,
     target: string,
     oneforall_args: string,
+    amass_args: string,
     subfinder_args: string
   ) =>
     this.instance.post<number>(
       `domains/scan?project_id=${project_id}&target=${target}`,
-      { oneforall_args, subfinder_args }
+      { oneforall_args, amass_args, subfinder_args }
     )
 
   public getPorts = (scan_id: number, keyword: string) =>

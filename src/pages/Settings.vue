@@ -109,7 +109,7 @@
                 expand-separator
                 label="Domains"
                 icon="dns"
-                caption="OneForAll, subfinder"
+                caption="OneForAll, amass, subfinder"
                 :header-inset-level="0.5"
                 :content-inset-level="0.5"
               >
@@ -119,6 +119,12 @@
                       outlined
                       label="OneForAll"
                       v-model="tools.oneforall_args"
+                    />
+                    <q-input
+                      class="q-mt-md"
+                      outlined
+                      label="amass"
+                      v-model="tools.amass_args"
                     />
                     <q-input
                       class="q-mt-md"
@@ -270,6 +276,7 @@ function useTools() {
     port_http: [] as number[],
     httpx_args: '',
     oneforall_args: '',
+    amass_args: '',
     subfinder_args: '',
     nmap_args: '',
     masscan_args: '',
