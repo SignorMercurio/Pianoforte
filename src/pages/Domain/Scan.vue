@@ -51,16 +51,8 @@
                     target="_blank"
                   ></q-btn>
                 </q-td>
-                <q-td key="ip" :props="props" @click="copy(props.row.ip)">
-                  {{ props.row.ip }}
-                  <q-tooltip v-if="props.row.ip">{{ props.row.ip }}</q-tooltip>
-                </q-td>
-                <q-td key="cname" :props="props" @click="copy(props.row.cname)">
-                  {{ props.row.cname }}
-                  <q-tooltip v-if="props.row.cname">{{
-                    props.row.cname
-                  }}</q-tooltip>
-                </q-td>
+                <td-long key="ip" :value="props.row.ip" />
+                <td-long key="cname" :value="props.row.cname" />
                 <q-td key="status" :props="props">
                   <q-chip
                     v-if="props.row.status"
@@ -69,22 +61,8 @@
                     >{{ props.row.status }}</q-chip
                   >
                 </q-td>
-                <q-td key="title" :props="props" @click="copy(props.row.title)">
-                  {{ props.row.title }}
-                  <q-tooltip v-if="props.row.title">{{
-                    props.row.title
-                  }}</q-tooltip>
-                </q-td>
-                <q-td
-                  key="server"
-                  :props="props"
-                  @click="copy(props.row.server)"
-                >
-                  {{ props.row.server }}
-                  <q-tooltip v-if="props.row.server">{{
-                    props.row.server
-                  }}</q-tooltip>
-                </q-td>
+                <td-long key="title" :value="props.row.title" />
+                <td-long key="server" :value="props.row.server" />
                 <q-td key="op" :props="props">
                   <send-btn
                     :project_id="scan.project.id"
@@ -124,9 +102,10 @@ import actionBtn from 'components/Buttons/ActionBtn.vue'
 import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
+import tdLong from 'components/Columns/TdLong.vue'
 import { Domain, col } from 'src/models/domain'
 import { Scan } from 'src/models/scan'
-import { del, del_all, status2color, copy } from 'components/utils'
+import { del, del_all, status2color } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -202,6 +181,7 @@ export default defineComponent({
     exportBtn,
     scanInfo,
     chart,
+    tdLong,
   },
   setup() {
     const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan
@@ -212,7 +192,6 @@ export default defineComponent({
       del,
       del_all,
       status2color,
-      copy,
     }
   },
 })

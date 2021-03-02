@@ -61,12 +61,7 @@
                 <q-td key="length" :props="props">
                   {{ props.row.length }}
                 </q-td>
-                <q-td key="redirect" :props="props">
-                  {{ props.row.redirect }}
-                  <q-tooltip v-if="props.row.redirect">{{
-                    props.row.redirect
-                  }}</q-tooltip>
-                </q-td>
+                <td-long key="redirect" :value="props.row.redirect" />
                 <q-td key="op" :props="props">
                   <crud-btn
                     type="del"
@@ -100,6 +95,7 @@ import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
+import tdLong from 'components/Columns/TdLong.vue'
 import { Dir, col } from 'src/models/dir'
 import { Scan } from 'src/models/scan'
 import { del, del_all, status2color } from 'components/utils'
@@ -146,6 +142,7 @@ export default defineComponent({
     actionBtn,
     exportBtn,
     scanInfo,
+    tdLong,
   },
   setup() {
     const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan

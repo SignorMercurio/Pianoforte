@@ -12,43 +12,41 @@ const col = [
     label: 'ID',
     align: 'left',
     field: 'id',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'path',
     label: 'Path',
     align: 'left',
     field: 'path',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'status',
     label: 'Status',
     align: 'left',
     field: 'status',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'length',
     label: 'Content Length',
     align: 'left',
     field: 'length',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'redirect',
     label: 'Redirect',
     align: 'left',
     field: 'redirect',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'op',
     label: 'Operations',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ]
 
 export { Dir, col }

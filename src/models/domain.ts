@@ -8,7 +8,6 @@ interface Domain {
   status: number
   title: string
   server: string
-  // scan_id: number
 }
 
 const col = [
@@ -43,8 +42,6 @@ const col = [
     label: 'IP',
     align: 'left',
     field: 'ip',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -52,8 +49,6 @@ const col = [
     label: 'CNAME',
     align: 'left',
     field: 'cname',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -68,8 +63,6 @@ const col = [
     label: 'Title',
     align: 'left',
     field: 'title',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -77,8 +70,6 @@ const col = [
     label: 'Server',
     align: 'left',
     field: 'server',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {

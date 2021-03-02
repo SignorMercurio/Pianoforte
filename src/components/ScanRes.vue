@@ -44,9 +44,7 @@
               <q-td key="project" :props="props">
                 {{ props.row.project.name }}
               </q-td>
-              <q-td key="target" :props="props" @click="copy(props.row.target)">
-                {{ props.row.target }}
-              </q-td>
+              <td-long key="target" :value="props.row.target" />
               <q-td key="created_at" :props="props">
                 {{ fmtTime(props.row.created_at) }}
               </q-td>
@@ -77,7 +75,8 @@ import { Scan } from 'src/models/scan'
 import module from './Module.vue'
 import crudBtn from './Buttons/CrudBtn.vue'
 import actionBtn from './Buttons/ActionBtn.vue'
-import { fmtTime, str2color, copy } from './utils'
+import tdLong from './Columns/TdLong.vue'
+import { fmtTime, str2color } from './utils'
 
 export default defineComponent({
   name: 'scanRes',
@@ -85,6 +84,7 @@ export default defineComponent({
     module,
     crudBtn,
     actionBtn,
+    tdLong,
   },
   props: {
     parent: {
@@ -134,7 +134,6 @@ export default defineComponent({
       del,
       fmtTime,
       str2color,
-      copy,
     }
   },
 })

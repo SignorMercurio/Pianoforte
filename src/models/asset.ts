@@ -46,12 +46,17 @@ const col = [
     sortable: true,
   },
   {
+    name: 'length',
+    label: 'Content Length',
+    align: 'left',
+    field: 'length',
+    sortable: true,
+  },
+  {
     name: 'title',
     label: 'Title',
     align: 'left',
     field: 'title',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -59,8 +64,6 @@ const col = [
     label: 'Service',
     align: 'left',
     field: 'service',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -68,8 +71,6 @@ const col = [
     label: 'Server',
     align: 'left',
     field: 'server',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {
@@ -77,8 +78,6 @@ const col = [
     label: 'Domain',
     align: 'left',
     field: 'domain',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
     sortable: true,
   },
   {

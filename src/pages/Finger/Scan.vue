@@ -20,16 +20,7 @@
                 <q-td key="tool" :props="props">
                   {{ props.row.tool }}
                 </q-td>
-                <q-td
-                  key="finger"
-                  :props="props"
-                  @click="copy(props.row.finger)"
-                >
-                  {{ props.row.finger }}
-                  <q-tooltip v-if="props.row.finger">{{
-                    props.row.finger
-                  }}</q-tooltip>
-                </q-td>
+                <td-long key="finger" :value="props.row.finger" />
                 <q-td key="op" :props="props">
                   <crud-btn
                     type="del"
@@ -63,9 +54,10 @@ import crudBtn from 'components/Buttons/CrudBtn.vue'
 import actionBtn from 'components/Buttons/ActionBtn.vue'
 import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
+import tdLong from 'components/Columns/TdLong.vue'
 import { Finger, col } from 'src/models/finger'
 import { Scan } from 'src/models/scan'
-import { del, del_all, copy } from 'components/utils'
+import { del, del_all } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -101,10 +93,11 @@ export default defineComponent({
     actionBtn,
     exportBtn,
     scanInfo,
+    tdLong,
   },
   setup() {
     const scan = JSON.parse(sessionStorage.getItem('scan') as string) as Scan
-    return { scan, ...useTable(scan.id), del, del_all, copy }
+    return { scan, ...useTable(scan.id), del, del_all }
   },
 })
 </script>

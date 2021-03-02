@@ -12,43 +12,41 @@ const col = [
     label: 'ID',
     align: 'left',
     field: 'id',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'ip',
     label: 'IP',
     align: 'left',
     field: 'ip',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'port',
     label: 'Port',
     align: 'left',
     field: 'port',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'protocol',
     label: 'Protocol',
     align: 'left',
     field: 'protocol',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'service',
     label: 'Service',
     align: 'left',
     field: 'service',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'op',
     label: 'Operations',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ]
 
 export { Port, col }

@@ -61,42 +61,13 @@
                     >{{ props.row.status }}</q-chip
                   ></q-td
                 >
-                <q-td key="title" :props="props" @click="copy(props.row.title)">
-                  {{ props.row.title }}
-                  <q-tooltip v-if="props.row.title">{{
-                    props.row.title
-                  }}</q-tooltip>
+                <q-td key="length" :props="props">
+                  {{ props.row.length }}
                 </q-td>
-                <q-td
-                  key="service"
-                  :props="props"
-                  @click="copy(props.row.service)"
-                >
-                  {{ props.row.service }}
-                  <q-tooltip v-if="props.row.service">{{
-                    props.row.service
-                  }}</q-tooltip>
-                </q-td>
-                <q-td
-                  key="server"
-                  :props="props"
-                  @click="copy(props.row.server)"
-                >
-                  {{ props.row.server }}
-                  <q-tooltip v-if="props.row.server">{{
-                    props.row.server
-                  }}</q-tooltip>
-                </q-td>
-                <q-td
-                  key="domain"
-                  :props="props"
-                  @click="copy(props.row.domain)"
-                >
-                  {{ props.row.domain }}
-                  <q-tooltip v-if="props.row.domain">{{
-                    props.row.domain
-                  }}</q-tooltip>
-                </q-td>
+                <td-long key="title" :value="props.row.title" />
+                <td-long key="service" :value="props.row.service" />
+                <td-long key="server" :value="props.row.server" />
+                <td-long key="domain" :value="props.row.domain" />
                 <q-td key="op" :props="props">
                   <send-btn
                     :project_id="scan.project.id"
@@ -143,9 +114,10 @@ import actionBtn from 'components/Buttons/ActionBtn.vue'
 import exportBtn from 'components/Buttons/ExportBtn.vue'
 import scanInfo from 'components/ScanInfo.vue'
 import chart from 'components/Chart.vue'
+import tdLong from 'components/Columns/TdLong.vue'
 import { Asset, col } from 'src/models/asset'
 import { Scan } from 'src/models/scan'
-import { del, del_all, status2color, copy } from 'components/utils'
+import { del, del_all, status2color } from 'components/utils'
 
 const api = MainApi.getInstance()
 
@@ -234,6 +206,7 @@ export default defineComponent({
     exportBtn,
     scanInfo,
     chart,
+    tdLong,
   },
   setup() {
     const router = useRouter()
@@ -245,7 +218,6 @@ export default defineComponent({
       del,
       del_all,
       status2color,
-      copy,
     }
   },
 })
