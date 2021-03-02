@@ -1,14 +1,14 @@
 interface Asset {
   id: number
-  name: string
   ip: string
   port: number
   url: string
+  length: number
   service: string
   status: number
+  title: string
+  server: string
   domain: string
-  vendor: string
-  // scan_id: number
 }
 
 const col = [
@@ -17,43 +17,42 @@ const col = [
     label: 'ID',
     align: 'left',
     field: 'id',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'ip',
     label: 'IP',
     align: 'left',
     field: 'ip',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'port',
     label: 'Port',
     align: 'left',
     field: 'port',
-    sortable: true
+    sortable: true,
   },
   {
     name: 'url',
     label: 'URL',
     align: 'left',
-    field: 'url'
-  },
-  {
-    name: 'name',
-    label: 'Title',
-    align: 'left',
-    field: 'name',
-    style: 'max-width: 150px',
-    classes: 'ellipsis',
-    sortable: true
   },
   {
     name: 'status',
     label: 'Status',
     align: 'left',
     field: 'status',
-    sortable: true
+    sortable: true,
+  },
+  {
+    name: 'title',
+    label: 'Title',
+    align: 'left',
+    field: 'title',
+    style: 'max-width: 150px',
+    classes: 'ellipsis',
+    sortable: true,
   },
   {
     name: 'service',
@@ -62,29 +61,31 @@ const col = [
     field: 'service',
     style: 'max-width: 150px',
     classes: 'ellipsis',
-    sortable: true
+    sortable: true,
   },
-  // {
-  //   name: 'domain',
-  //   label: 'Domain',
-  //   align: 'left',
-  //   field: 'domain',
-  //   sortable: true
-  // },
   {
-    name: 'vendor',
-    label: 'Vendor',
+    name: 'server',
+    label: 'Server',
     align: 'left',
-    field: 'vendor',
+    field: 'server',
     style: 'max-width: 150px',
     classes: 'ellipsis',
-    sortable: true
+    sortable: true,
+  },
+  {
+    name: 'domain',
+    label: 'Domain',
+    align: 'left',
+    field: 'domain',
+    style: 'max-width: 150px',
+    classes: 'ellipsis',
+    sortable: true,
   },
   {
     name: 'op',
     label: 'Operations',
-    align: 'right'
-  }
+    align: 'right',
+  },
 ]
 
 export { Asset, col }

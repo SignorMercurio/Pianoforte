@@ -81,8 +81,8 @@ export default defineComponent({
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 5,
-            borderColor: '#fff',
-            borderWidth: 2,
+            borderColor: '#1d1d1d',
+            borderWidth: 1,
           },
           label: {
             show: false,
@@ -112,7 +112,7 @@ export default defineComponent({
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 5,
-            borderColor: '#fff',
+            borderColor: '#1d1d1d',
             borderWidth: 1,
           },
           label: {

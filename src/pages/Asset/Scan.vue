@@ -53,12 +53,6 @@
                     target="_blank"
                   ></q-btn>
                 </q-td>
-                <q-td key="name" :props="props" @click="copy(props.row.name)">
-                  {{ props.row.name }}
-                  <q-tooltip v-if="props.row.name">{{
-                    props.row.name
-                  }}</q-tooltip>
-                </q-td>
                 <q-td key="status" :props="props"
                   ><q-chip
                     v-if="props.row.status"
@@ -67,6 +61,12 @@
                     >{{ props.row.status }}</q-chip
                   ></q-td
                 >
+                <q-td key="title" :props="props" @click="copy(props.row.title)">
+                  {{ props.row.title }}
+                  <q-tooltip v-if="props.row.title">{{
+                    props.row.title
+                  }}</q-tooltip>
+                </q-td>
                 <q-td
                   key="service"
                   :props="props"
@@ -77,17 +77,24 @@
                     props.row.service
                   }}</q-tooltip>
                 </q-td>
-                <!-- <q-td key="domain" :props="props">
-                  {{ props.row.domain }}
-                </q-td> -->
                 <q-td
-                  key="vendor"
+                  key="server"
                   :props="props"
-                  @click="copy(props.row.vendor)"
+                  @click="copy(props.row.server)"
                 >
-                  {{ props.row.vendor }}
-                  <q-tooltip v-if="props.row.vendor">{{
-                    props.row.vendor
+                  {{ props.row.server }}
+                  <q-tooltip v-if="props.row.server">{{
+                    props.row.server
+                  }}</q-tooltip>
+                </q-td>
+                <q-td
+                  key="domain"
+                  :props="props"
+                  @click="copy(props.row.domain)"
+                >
+                  {{ props.row.domain }}
+                  <q-tooltip v-if="props.row.domain">{{
+                    props.row.domain
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
@@ -188,6 +195,11 @@ function useSend(scan: Scan, router: any) {
         from: 'IP',
         to: 'Ports',
         target: row.ip,
+      },
+      {
+        from: 'Domain',
+        to: 'Domains',
+        target: row.domain,
       },
       {
         from: 'URL',

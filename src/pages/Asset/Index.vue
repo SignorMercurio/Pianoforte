@@ -23,7 +23,7 @@
               class="col-6"
               outlined
               clearable
-              label="IP addresses, networks, etc."
+              label="Domain names, IP addresses, networks, etc."
               v-model="target"
               :hint="targetHint"
               lazy-rules
@@ -79,7 +79,7 @@ export default defineComponent({
     scanRes,
   },
   setup() {
-    const targetHint = 'e.g. 192.168.0.1/24'
+    const targetHint = 'e.g. 192.168.0.1/24; www.hackerone.com'
     const httpx_args = ref('')
 
     const {
