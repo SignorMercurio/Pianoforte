@@ -31,3 +31,4 @@
 
 - New
   - refactor(Settings): Adjust UI & Rename arguments
+  - feat(Domain, Port): Add more OSINT tools to achieve better accuracy

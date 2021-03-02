@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <scan-info :scan="scan" />
-    <chart :id="scan.id" type="domains" a-name="Alive" b-name="Level" />
+    <chart :id="scan.id" type="domains" a-name="HTTP Status" b-name="Level" />
 
     <module parent="Scan" icon="find_in_page" name="Domains">
       <template v-slot:card>
@@ -13,17 +13,11 @@
             v-model:pagination="pagination"
             :loading="loading"
           >
-            <template v-slot:top>
-              <q-toggle
-                label="Alive Domains Only"
-                v-model="alive_filter"
-                @update:modelValue="getDomains"
-              ></q-toggle>
-              <q-space></q-space>
+            <template v-slot:top-right>
               <q-input
                 class="col-3"
                 outlined
-                label="Search domain name"
+                label="Search subdomain"
                 v-model="keyword_filter"
                 debounce="300"
                 @update:modelValue="getDomains"
@@ -40,14 +34,6 @@
                 </q-td>
                 <q-td key="subdomain" :props="props">
                   {{ props.row.subdomain }}
-                </q-td>
-                <q-td key="alive" :props="props">
-                  <q-icon
-                    v-if="props.row.alive"
-                    name="check_circle"
-                    color="positive"
-                  ></q-icon>
-                  <q-icon v-else name="cancel" color="negative"></q-icon>
                 </q-td>
                 <q-td key="level" :props="props">
                   {{ props.row.level }}
@@ -90,13 +76,13 @@
                   }}</q-tooltip>
                 </q-td>
                 <q-td
-                  key="banner"
+                  key="server"
                   :props="props"
-                  @click="copy(props.row.banner)"
+                  @click="copy(props.row.server)"
                 >
-                  {{ props.row.banner }}
-                  <q-tooltip v-if="props.row.banner">{{
-                    props.row.banner
+                  {{ props.row.server }}
+                  <q-tooltip v-if="props.row.server">{{
+                    props.row.server
                   }}</q-tooltip>
                 </q-td>
                 <q-td key="op" :props="props">
@@ -153,14 +139,9 @@ function useTable(scan_id: number) {
   const columns = ref(col)
   const rows = ref<Domain[]>([])
   const keyword_filter = ref('')
-  const alive_filter = ref(false)
   const getDomains = async () => {
     loading.value = true
-    rows.value = await api.getDomains(
-      scan_id,
-      keyword_filter.value,
-      alive_filter.value
-    )
+    rows.value = await api.getDomains(scan_id, keyword_filter.value)
     loading.value = false
   }
 
@@ -172,7 +153,6 @@ function useTable(scan_id: number) {
     columns,
     rows,
     keyword_filter,
-    alive_filter,
     getDomains,
   }
 }
@@ -186,9 +166,9 @@ function useSend() {
         target: row.subdomain,
       },
       {
-        from: 'Subdomain',
+        from: 'IP',
         to: 'Ports',
-        target: row.subdomain,
+        target: row.ip,
       },
       {
         from: 'URL',

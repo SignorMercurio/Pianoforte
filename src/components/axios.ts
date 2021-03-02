@@ -151,9 +151,9 @@ class MainApi extends HttpClient {
       }
     )
 
-  public getDomains = (scan_id: number, keyword: string, alive: boolean) =>
+  public getDomains = (scan_id: number, keyword: string) =>
     this.instance.get<Domain[]>(
-      `domains/all?scan_id=${scan_id}&keyword=${keyword}&alive=${String(alive)}`
+      `domains/all?scan_id=${scan_id}&keyword=${keyword}`
     )
   public scanDomain = (
     project_id: number,

@@ -28,8 +28,8 @@ export function status2color(status: number) {
 
 export function str2color(status: string) {
   if (status === 'Pending') return 'orange'
-  else if (status === 'Scanning') return 'teal'
-  else return 'green'
+  else if (status === 'Finished') return 'green'
+  else return 'teal'
 }
 
 export function protocol2color(protocol: string) {
