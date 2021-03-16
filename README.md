@@ -42,11 +42,11 @@ docker run -it -p8000:8000 signormercurio/pianoforte
 
 And the backend will be ready at http://localhost:8000.
 
-> The backend is not designed to be publicly accessible.
+> ⚠ The backend is not designed to be publicly accessible. Use with caution.
 
 ### Frontend
 
-Download a [Release] which can be served over a simple HTTP server, or follow these instructions to start the app in development mode.
+Download a [Release](https://github.com/SignorMercurio/Pianoforte/releases) which can be served over a simple HTTP server, or follow these instructions to start the app in development mode.
 
 To install the dependencies:
 
