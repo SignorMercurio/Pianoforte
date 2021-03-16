@@ -28,6 +28,7 @@
 - Fix
 
   - fix(ExportBtn): Eliminate build errors when destructuring props
+  - fix(Asset): Deal with trailing slash in URL
 
 - New
   - refactor(Settings): Adjust UI & Rename arguments

@@ -94,6 +94,9 @@ export default defineComponent({
     const { project_id_filter, getScans } = table
 
     async function scan() {
+      if (target.value.endsWith('/')) {
+        target.value = target.value.slice(0, -1)
+      }
       const code = await api.scanAsset(
         project_id.value,
         target.value,
